@@ -25,16 +25,9 @@ uci set luci.main.mediaurlbase='/luci-static/argon' && uci commit luci
 # sed -ri "/option mediaurlbase/s#(/luci-static/)[^']+#\argon#" /etc/config/luci
 # uci commit luci
 
-# 去掉CpuMark跑数，直接显示分数
-#sed -i '/coremark.sh/d' /etc/crontabs/root
-#cat /dev/null > /etc/bench.log
-#echo " (CpuMark : 191219.823122" >> /etc/bench.log
-#echo " Scores)" >> /etc/bench.log
-
 #samba可以root登录，并添加root用户
 (echo zybin980329; echo zybin980329) | smbpasswd -s -a root
 /etc/init.d/samba4 restart
-
 
 # 添加系统信息
 grep "shell-motd" /etc/profile >/dev/null
@@ -53,5 +46,7 @@ export EDITOR="/usr/bin/nano"
 
 ' >> /etc/profile
 fi
+
+rm -rf /etc/bench.log
 
 exit 0
