@@ -246,7 +246,7 @@ jobs:
           # 编译插件目录
           git clone https://github.com/kiddin9/luci-app-wizard package/luci-app-wizard
           cat >> .config <<EOF
-          CONFIG_PACKAGE_luci-app-wizard=y
+          CONFIG_PACKAGE_luci-app-wizard=m
           EOF
           make defconfig
 
