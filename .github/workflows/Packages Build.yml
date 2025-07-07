@@ -129,23 +129,23 @@ jobs:
           docker-images: true
           swap-storage: true
 
-    # - name: 创建模拟物理磁盘
-    #   run: |
-    #     mnt_size=$(expr $(df -h /mnt | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 1)
-    #     root_size=$(expr $(df -h / | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 4)
-    #     sudo truncate -s "${mnt_size}"G /mnt/mnt.img
-    #     sudo truncate -s "${root_size}"G /root.img
-    #     sudo losetup /dev/loop6 /mnt/mnt.img
-    #     sudo losetup /dev/loop7 /root.img
-    #     sudo pvcreate /dev/loop6
-    #     sudo pvcreate /dev/loop7
-    #     sudo vgcreate github /dev/loop6 /dev/loop7
-    #     sudo lvcreate -n runner -l 100%FREE github
-    #     sudo mkfs.xfs /dev/github/runner
-    #     sudo mkdir -p /github-builder
-    #     sudo mount /dev/github/runner /github-builder
-    #     sudo chown -R $USER:$GROUPS /github-builder
-    #     df -Th
+      - name: 创建模拟物理磁盘
+        run: |
+          mnt_size=$(expr $(df -h /mnt | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 1)
+          root_size=$(expr $(df -h / | tail -1 | awk '{print $4}' | sed 's/[[:alpha:]]//g' | sed 's/\..*//') - 4)
+          sudo truncate -s "${mnt_size}"G /mnt/mnt.img
+          sudo truncate -s "${root_size}"G /root.img
+          sudo losetup /dev/loop6 /mnt/mnt.img
+          sudo losetup /dev/loop7 /root.img
+          sudo pvcreate /dev/loop6
+          sudo pvcreate /dev/loop7
+          sudo vgcreate github /dev/loop6 /dev/loop7
+          sudo lvcreate -n runner -l 100%FREE github
+          sudo mkfs.xfs /dev/github/runner
+          sudo mkdir -p /github-builder
+          sudo mount /dev/github/runner /github-builder
+          sudo chown -R $USER:$GROUPS /github-builder
+        df -Th
 
       - name: 下载${{matrix.target}}源码
         working-directory: /github-builder
@@ -350,11 +350,8 @@ jobs:
         id: organizer
         run: |
           mkdir -p ./artifact/package
-          mkdir -p ./artifact/buildinfo
-          cp -rf openwrt/.config ./artifact/buildinfo/${{matrix.target}}.config || true
           rm -rf $(find openwrt/bin/targets/ -type d -name "packages")
           cp -rf $(find openwrt/bin/packages/ -type f -name "*.ipk") ./artifact/package/ || true
-          cp -rf $(find openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/ || true        
           cp -rf openwrt/bin/targets/ ./artifact/targets/
           echo "编译完成时间..."
           START_SECONDS=${{ env.START_SECONDS }}
@@ -377,10 +374,3 @@ jobs:
         with:
           name: ${{matrix.target}}_OpenWrt_package_${{ env.FILE_TIME }}
           path: ./artifact/package/
-
-      - name: 上传固件信息
-        if: steps.compile.outcome == 'success' && env.UPLOAD_CONFIG == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{matrix.target}}_OpenWrt_buildinfo_${{ env.FILE_TIME }}
-          path: ./artifact/buildinfo/
