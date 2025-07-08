@@ -1,12 +1,5 @@
 [
   {
-    "name": "wizard",
-    "git": "https://github.com/kiddin9/luci-app-wizard",
-    "path": "package/luci-app-wizard",
-    "config": "CONFIG_PACKAGE_luci-app-wizard=m",
-    "compile_path": "package/luci-app-wizard/compile"
-  },
-  {
     "name": "mosdns",
     "git": "https://github.com/sbwml/luci-app-mosdns",
     "path": "package/mosdns",
