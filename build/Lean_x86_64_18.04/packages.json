@@ -1,16 +1,9 @@
 [
   {
-    "name": "mosdns",
-    "git": "https://github.com/sbwml/luci-app-mosdns",
-    "path": "package/mosdns",
-    "config": "CONFIG_PACKAGE_luci-app-mosdns=m",
-    "compile_path": "package/mosdns/luci-app-mosdns/compile"
-  },
-  {
-    "name": "v2ray",
-    "git": "https://github.com/sbwml/v2ray-geodata",
-    "path": "package/v2ray-geodata",
-    "config": "",
-    "compile_path": ""
+    "name": "lucky",
+    "git": "https://github.com/sirpdboy/luci-app-lucky",
+    "path": "package/lucky",
+    "config": "CONFIG_PACKAGE_luci-app-lucky=m",
+    "compile_path": "package/lucky/luci-app-lucky/compile"
   }
 ]
