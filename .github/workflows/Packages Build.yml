@@ -33,17 +33,30 @@ jobs:
       - name: 检验仓库
         uses: actions/checkout@v4
 
+      - name: 设置 MODEL 环境变量
+        id: set_model
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "使用手动触发传入的 MODEL: ${{ github.event.inputs.MODEL }}"
+            echo "MODEL=${{ github.event.inputs.MODEL }}" >> $GITHUB_ENV
+          else
+            # push 触发，从改动的 packages.json 路径中提取 MODEL 目录名
+            MODEL_DIR=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep 'packages.json' | head -n1 | cut -d '/' -f2)
+            echo "自动提取到 MODEL: $MODEL_DIR"
+            echo "MODEL=$MODEL_DIR" >> $GITHUB_ENV
+          fi
+
       - name: 检测脚本
         run: |
-          source "${GITHUB_WORKSPACE}/build/${{ github.event.inputs.MODEL }}/settings.ini"
+          source "${GITHUB_WORKSPACE}/build/${{ env.MODEL }}/settings.ini"
           echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
           echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
           echo "FIRMWARE_MESSAGE=${FIRMWARE_MESSAGE}" >> $GITHUB_ENV
           echo "CUSTOM_SH=${CUSTOM_SH}" >> $GITHUB_ENV
           echo "UPLOAD_IPK=${UPLOAD_IPK}" >> $GITHUB_ENV
           echo "CACHE_BUILD=true" >> $GITHUB_ENV
-          echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{ github.event.inputs.MODEL }}" >> $GITHUB_ENV
-          echo "PLUGIN_CONFIG_PATH=build/${{ github.event.inputs.MODEL }}/packages.json" >> $GITHUB_ENV
+          echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{ env.MODEL }}" >> $GITHUB_ENV
+          echo "PLUGIN_CONFIG_PATH=build/${{ env.MODEL }}/packages.json" >> $GITHUB_ENV
 
       - name: 整理系统
         env:
