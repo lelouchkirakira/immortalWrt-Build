@@ -31,6 +31,11 @@ jobs:
     runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
 
+    name: 编译 Packages
+    strategy:
+      matrix:
+        target: [${{ github.event.inputs.MODEL }}]
+
     steps:
       - name: Checkout 仓库
         uses: actions/checkout@v4
