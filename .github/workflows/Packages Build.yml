@@ -21,6 +21,26 @@ on:
         default: true
         type: boolean
 
+      PLUGIN_GIT:
+        description: "插件 Git 地址（例如：https://github.com/kiddin9/luci-app-wizard）"
+        required: true
+        default: "https://github.com/kiddin9/luci-app-wizard"
+
+      PLUGIN_PATH:
+        description: "插件克隆到的路径（例如：package/luci-app-wizard）"
+        required: true
+        default: "package/luci-app-wizard"
+
+      PLUGIN_CONFIG:
+        description: "插件 .config 配置项（例如：CONFIG_PACKAGE_luci-app-wizard=m）"
+        required: true
+        default: "CONFIG_PACKAGE_luci-app-wizard=m"
+
+      PLUGIN_COMPILE_PATH:
+        description: "插件编译路径（例如：package/luci-app-wizard/compile）"
+        required: true
+        default: "package/luci-app-wizard/compile"
+
 run-name: ${{ format('编译 Packages', inputs.MODEL) }}
 
 env:
@@ -98,8 +118,8 @@ jobs:
           fi
 
           # 添加编译插件插件
-          git clone https://github.com/kiddin9/luci-app-wizard package/luci-app-wizard
-          echo "CONFIG_PACKAGE_luci-app-wizard=m" >> .config
+          git clone "${{ github.event.inputs.PLUGIN_GIT }}" "${{ github.event.inputs.PLUGIN_PATH }}"
+          echo "${{ github.event.inputs.PLUGIN_CONFIG }}" >> .config
           make defconfig
 
       - name: 下载编译所需文件
@@ -110,7 +130,7 @@ jobs:
         id: compile
         run: |
           cd openwrt
-          make package/luci-app-wizard/compile V=s
+          make ${{ github.event.inputs.PLUGIN_COMPILE_PATH }} V=s
 
       - name: 整理固件文件
         id: organizer
