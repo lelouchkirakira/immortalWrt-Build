@@ -156,7 +156,10 @@ jobs:
         id: compile
         run: |
           cd openwrt
+          
           make target/linux/prepare
+          make target/linux/compile
+          
           if [ ! -f .plugin_compile_paths ]; then
             echo "未找到插件编译路径文件，跳过插件编译"
             exit 0
