@@ -50,6 +50,7 @@ jobs:
           echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
           echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
           echo "FIRMWARE_MESSAGE=${FIRMWARE_MESSAGE}" >> $GITHUB_ENV
+          echo "CUSTOM_SH=${CUSTOM_SH}" >> $GITHUB_ENV
           echo "UPLOAD_IPK=${UPLOAD_IPK}" >> $GITHUB_ENV
           echo "UPLOAD_TARGETS=true" >> $GITHUB_ENV
 
@@ -90,17 +91,19 @@ jobs:
           sudo timedatectl set-timezone "$TZ"
           echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
 
-      - name: 加载源,定制文件并生成自定义配置
+      - name: 安装源
         run: |
+          # 复制配置文件到源码目录
+          cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
           cd openwrt
-          # 启用18.06 Luci
-          sed -i 's|^#src-git luci https://github.com/coolsnowwolf/luci$|src-git luci https://github.com/coolsnowwolf/luci|' feeds.conf.default
-          sed -i 's|^src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-23.05$|#src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-23.05|' feeds.conf.default
 
-          # 更新并安装 feeds
-          ./scripts/feeds clean
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a -f
+          echo "执行脚本"
+          if [ -f "${WORKPATH}/$CUSTOM_SH" ]; then
+          (
+            chmod +x ${WORKPATH}/$CUSTOM_SH
+            /bin/bash "${WORKPATH}/$CUSTOM_SH"
+          )
+          fi
 
           # 添加编译插件插件
           git clone https://github.com/kiddin9/luci-app-wizard package/luci-app-wizard
