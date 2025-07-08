@@ -102,13 +102,13 @@ jobs:
 
           CONFIG_FILE="${GITHUB_WORKSPACE}/${{ env.PLUGIN_CONFIG_PATH }}"
           echo "读取插件配置文件: $CONFIG_FILE"
-          sudo -E apt-get -y install jq
-          plugin_count=$(jq length "$CONFIG_FILE")
+
+          plugin_count=$(/usr/bin/jq length "$CONFIG_FILE")
           for i in $(seq 0 $((plugin_count - 1))); do
-            GIT=$(jq -r ".[$i].git" "$CONFIG_FILE")
-            PATH=$(jq -r ".[$i].path" "$CONFIG_FILE")
-            CONFIG=$(jq -r ".[$i].config" "$CONFIG_FILE")
-            COMPILE=$(jq -r ".[$i].compile_path" "$CONFIG_FILE")
+            GIT=$(/usr/bin/jq -r ".[$i].git" "$CONFIG_FILE")
+            PATH=$(/usr/bin/jq -r ".[$i].path" "$CONFIG_FILE")
+            CONFIG=$(/usr/bin/jq -r ".[$i].config" "$CONFIG_FILE")
+            COMPILE=$(/usr/bin/jq -r ".[$i].compile_path" "$CONFIG_FILE")
 
             echo "处理插件: $i"
             echo "克隆地址: $GIT"
