@@ -15,6 +15,10 @@ on:
           - Lean_R3S_18.04
           - Immortalwrt_x86_64
 
+  push:
+    paths:
+      - '**/packages.json'
+
 run-name: 编译 Packages
 
 env:
@@ -54,11 +58,6 @@ jobs:
           sudo -E apt-get clean
           sudo mkdir -p /github-builder
           sudo chown $USER:$GROUPS /github-builder
-
-      - name: 验证 jq 是否可用
-        run: |
-          which jq || echo "jq 不存在"
-          jq --version || echo "无法执行 jq"
 
       - name: 下载源码
         working-directory: /github-builder
