@@ -52,10 +52,10 @@ jobs:
     if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
 
     steps:
-      - name: Checkout 仓库
+      - name: 检验仓库
         uses: actions/checkout@v4
 
-      - name: 检测脚本设置
+      - name: 检测脚本
         run: |
           source "${GITHUB_WORKSPACE}/build/${{ github.event.inputs.MODEL }}/settings.ini"
           echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
@@ -63,11 +63,10 @@ jobs:
           echo "FIRMWARE_MESSAGE=${FIRMWARE_MESSAGE}" >> $GITHUB_ENV
           echo "CUSTOM_SH=${CUSTOM_SH}" >> $GITHUB_ENV
           echo "UPLOAD_IPK=${UPLOAD_IPK}" >> $GITHUB_ENV
-          echo "UPLOAD_TARGETS=true" >> $GITHUB_ENV
           echo "CACHE_BUILD=${{ inputs.CACHE_BUILD }}" >> $GITHUB_ENV
           echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{ github.event.inputs.MODEL }}" >> $GITHUB_ENV
 
-      - name: 初始化系统环境
+      - name: 整理系统
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
@@ -80,7 +79,7 @@ jobs:
           sudo mkdir -p /github-builder
           sudo chown $USER:$GROUPS /github-builder
 
-      - name: 下载${{matrix.target}}源码
+      - name: 下载源码
         working-directory: /github-builder
         run: |
           df -hT $PWD
@@ -98,13 +97,13 @@ jobs:
           prefix: ${{ github.workspace }}/openwrt
           mixkey: ${{ env.FIRMWARE_MESSAGE }}
           
-      - name: 更新时区、编译时间
+      - name: 更新时区
         id: date
         run: |
           sudo timedatectl set-timezone "$TZ"
           echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
 
-      - name: 安装源
+      - name: 安装源码
         run: |
           # 复制配置文件到源码目录
           cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
@@ -123,33 +122,24 @@ jobs:
           echo "${{ github.event.inputs.PLUGIN_CONFIG }}" >> .config
           make defconfig
 
-      - name: 下载编译所需文件
+      - name: 下载文件
         run: |
           cd openwrt && make download -j4
 
-      - name: 开始编译插件
+      - name: 编译插件
         id: compile
         run: |
           cd openwrt
           make ${{ github.event.inputs.PLUGIN_COMPILE_PATH }} V=s
 
-      - name: 整理固件文件
+      - name: 整理插件
         id: organizer
         run: |
           mkdir -p ./artifact/package
-          mkdir -p ./artifact/targets
           rm -rf $(find openwrt/bin/targets/ -type d -name "packages")
           cp -rf $(find openwrt/bin/packages/ -type f -name "*.ipk") ./artifact/package/ || true
-          cp -rf openwrt/bin/targets/ ./artifact/targets/
 
-      - name: 上传targets文件夹
-        if: steps.compile.outcome == 'success' && env.UPLOAD_TARGETS == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{matrix.target}}_OpenWrt_targets_${{ env.FILE_TIME }}
-          path: ./artifact/targets/
-
-      - name: 上传插件包文件
+      - name: 上传插件
         if: steps.compile.outcome == 'success' && env.UPLOAD_IPK == 'true'
         uses: actions/upload-artifact@v4
         with:
