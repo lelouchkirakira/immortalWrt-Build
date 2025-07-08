@@ -99,18 +99,25 @@ jobs:
           plugin_count=$(jq length "$CONFIG_FILE")
           for i in $(seq 0 $((plugin_count - 1))); do
             GIT=$(jq -r ".[$i].git" "$CONFIG_FILE")
+            BRANCH=$(jq -r ".[$i].branch // empty" "$CONFIG_FILE")
             PLUGIN_PATH=$(jq -r ".[$i].path" "$CONFIG_FILE")
             CONFIG=$(jq -r ".[$i].config" "$CONFIG_FILE")
             COMPILE=$(jq -r ".[$i].compile_path" "$CONFIG_FILE")
 
             echo "克隆地址: $GIT"
+            echo "分支版本: ${BRANCH:-默认}"
             echo "克隆路径: $PLUGIN_PATH"
             echo "配置项: $CONFIG"
             echo "编译路径: $COMPILE"
 
-            git clone "$GIT" "$PLUGIN_PATH"
-            echo "$CONFIG" >> .config
-            echo "$COMPILE" >> .plugin_compile_paths
+            if [ -n "$BRANCH" ]; then
+              git clone -b "$BRANCH" "$GIT" "$PLUGIN_PATH"
+            else
+              git clone "$GIT" "$PLUGIN_PATH"
+            fi
+
+            [ -n "$CONFIG" ] && echo "$CONFIG" >> .config
+            [ -n "$COMPILE" ] && echo "$COMPILE" >> .plugin_compile_paths
           done
 
           make defconfig
