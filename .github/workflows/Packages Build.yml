@@ -15,12 +15,6 @@ on:
           - Lean_R3S_18.04
           - Immortalwrt_x86_64
 
-      CACHE_BUILD:
-        description: "缓存加速"
-        required: false
-        default: true
-        type: boolean
-
 run-name: 编译 Packages
 
 env:
@@ -43,7 +37,7 @@ jobs:
           echo "FIRMWARE_MESSAGE=${FIRMWARE_MESSAGE}" >> $GITHUB_ENV
           echo "CUSTOM_SH=${CUSTOM_SH}" >> $GITHUB_ENV
           echo "UPLOAD_IPK=${UPLOAD_IPK}" >> $GITHUB_ENV
-          echo "CACHE_BUILD=${{ inputs.CACHE_BUILD }}" >> $GITHUB_ENV
+          echo "CACHE_BUILD=true" >> $GITHUB_ENV
           echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{ github.event.inputs.MODEL }}" >> $GITHUB_ENV
           echo "PLUGIN_CONFIG_PATH=build/${{ github.event.inputs.MODEL }}/packages.json" >> $GITHUB_ENV
 
