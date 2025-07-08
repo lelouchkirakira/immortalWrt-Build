@@ -25,12 +25,6 @@ run-name: ${{ format('编译 Packages', inputs.MODEL) }}
 
 env:
   TZ: Asia/Shanghai
-  MY_GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-  WECHAT_WORK_URL: ${{ secrets.WECHAT_WORK_URL }}
-  WECHAT_WORK_TOKEN: ${{ secrets.WECHAT_WORK_TOKEN }}
-  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  GITHUB_RELEASE: https://github.com/xcz-ns/OpenWrt-Build/releases
 
 jobs:
   build:
@@ -55,23 +49,8 @@ jobs:
           source "${GITHUB_WORKSPACE}/build/${{matrix.target}}/settings.ini"
           echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
           echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
-          echo "CONFIG_FILE=${CONFIG_FILE}" >> $GITHUB_ENV
           echo "FIRMWARE_MESSAGE=${FIRMWARE_MESSAGE}" >> $GITHUB_ENV
-          echo "CUSTOM_SH=${CUSTOM_SH}" >> $GITHUB_ENV
-          echo "CACHE_BUILD=${CACHE_BUILD}" >> $GITHUB_ENV
-          echo "SSH_ACTIONS=${SSH_ACTIONS}" >> $GITHUB_ENV
-          echo "UPLOAD_FIRMWARE=${UPLOAD_FIRMWARE}" >> $GITHUB_ENV
-          echo "UPLOAD_QCOW2=${UPLOAD_QCOW2}" >> $GITHUB_ENV
-          echo "UPLOAD_VHDX=${UPLOAD_VHDX}" >> $GITHUB_ENV
-          echo "UPLOAD_VMDK=${UPLOAD_VMDK}" >> $GITHUB_ENV
           echo "UPLOAD_IPK=${UPLOAD_IPK}" >> $GITHUB_ENV
-          echo "UPLOAD_CONFIG=${UPLOAD_CONFIG}" >> $GITHUB_ENV
-          echo "UPLOAD_RELEASE=${UPLOAD_RELEASE}" >> $GITHUB_ENV
-          echo "WECHAT_WORK_PUSH=${WECHAT_WORK_PUSH}" >> $GITHUB_ENV
-          echo "TELEGRAM_BOT=${TELEGRAM_BOT}" >> $GITHUB_ENV
-          #添加变量
-          echo "HOME=${GITHUB_WORKSPACE}/openwrt" >> $GITHUB_ENV
-          echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
           echo "UPLOAD_TARGETS=true" >> $GITHUB_ENV
 
       - name: 初始化系统环境
@@ -98,31 +77,9 @@ jobs:
           echo "$TOOLCHAIN_HASH" > openwrt/.toolchain.hash
           ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
-      - name: 缓存使用标志
-        env:
-          EVENT_NAME: ${{ github.event_name }}
-          INPUT_CACHE_BUILD: ${{ github.event.inputs.CACHE_BUILD }}
-          CACHE_BUILD: ${{ env.CACHE_BUILD }}
-        run: |
-          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            if [ "$INPUT_CACHE_BUILD" = "true" ]; then
-              echo "USE_CACHE=true" >> $GITHUB_ENV
-            else
-              echo "USE_CACHE=false" >> $GITHUB_ENV
-            fi
-          elif [ "$EVENT_NAME" = "schedule" ]; then
-            if [ "$CACHE_BUILD" = "true" ]; then
-              echo "USE_CACHE=true" >> $GITHUB_ENV
-            else
-              echo "USE_CACHE=false" >> $GITHUB_ENV
-            fi
-          else
-            echo "USE_CACHE=false" >> $GITHUB_ENV
-          fi
-
       - name: 缓存加速
         uses: xcz-ns/cachewrtbuild@main
-        if: env.USE_CACHE == 'true'
+        if: env.CACHE_BUILD == 'true'
         with:
           ccache: "true"
           prefix: ${{ github.workspace }}/openwrt
