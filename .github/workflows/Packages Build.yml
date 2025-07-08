@@ -90,12 +90,10 @@ jobs:
           cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
           cd openwrt
 
-          if [ -f "${WORKPATH}/$CUSTOM_SH" ]; then
-          (
-            chmod +x ${WORKPATH}/$CUSTOM_SH
-            /bin/bash "${WORKPATH}/$CUSTOM_SH"
-          )
-          fi
+          ./scripts/feeds clean
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a -f
+          ./scripts/feeds install -a -f
 
           CONFIG_FILE="${GITHUB_WORKSPACE}/${{ env.PLUGIN_CONFIG_PATH }}"
           echo "读取插件配置文件: $CONFIG_FILE"
