@@ -56,11 +56,11 @@ jobs:
 
           sudo apt-get update || {
             echo "⚠️ apt update 失败，尝试恢复源"
-            cat <<EOF | sudo tee /etc/apt/sources.list
-deb http://archive.ubuntu.com/ubuntu jammy main universe restricted multiverse
-deb http://archive.ubuntu.com/ubuntu jammy-updates main universe restricted multiverse
-deb http://archive.ubuntu.com/ubuntu jammy-security main universe restricted multiverse
-EOF
+
+            sudo bash -c 'echo "deb http://archive.ubuntu.com/ubuntu jammy main universe restricted multiverse" > /etc/apt/sources.list'
+            sudo bash -c 'echo "deb http://archive.ubuntu.com/ubuntu jammy-updates main universe restricted multiverse" >> /etc/apt/sources.list'
+            sudo bash -c 'echo "deb http://archive.ubuntu.com/ubuntu jammy-security main universe restricted multiverse" >> /etc/apt/sources.list'
+
             sudo apt-get update
           }
 
@@ -71,7 +71,9 @@ EOF
           sudo -E apt-get -qq clean
           sudo mkdir -p /github-builder
           sudo chown $USER:$GROUPS /github-builder
+
           command -v awk || { echo "❌ awk 安装失败，终止构建"; exit 1; }
+
 
       - name: 下载源码
         working-directory: /github-builder
