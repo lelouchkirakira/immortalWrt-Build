@@ -21,26 +21,6 @@ on:
         default: true
         type: boolean
 
-      PLUGIN_GIT:
-        description: "插件 Git 地址"
-        required: true
-        default: "https://github.com/kiddin9/luci-app-wizard"
-
-      PLUGIN_PATH:
-        description: "插件克隆到的路径"
-        required: true
-        default: "package/luci-app-wizard"
-
-      PLUGIN_CONFIG:
-        description: "插件 .config 配置项"
-        required: true
-        default: "CONFIG_PACKAGE_luci-app-wizard=m"
-
-      PLUGIN_COMPILE_PATH:
-        description: "插件编译路径"
-        required: true
-        default: "package/luci-app-wizard/compile"
-
 run-name: 编译 Packages
 
 env:
@@ -65,6 +45,7 @@ jobs:
           echo "UPLOAD_IPK=${UPLOAD_IPK}" >> $GITHUB_ENV
           echo "CACHE_BUILD=${{ inputs.CACHE_BUILD }}" >> $GITHUB_ENV
           echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{ github.event.inputs.MODEL }}" >> $GITHUB_ENV
+          echo "PLUGIN_CONFIG_PATH=build/${{ github.event.inputs.MODEL }}/packages.ini" >> $GITHUB_ENV
 
       - name: 整理系统
         env:
@@ -96,25 +77,47 @@ jobs:
           ccache: "true"
           prefix: ${{ github.workspace }}/openwrt
           mixkey: ${{ env.FIRMWARE_MESSAGE }}
-          
+
       - name: 更新时区
         id: date
         run: |
           sudo timedatectl set-timezone "$TZ"
           echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
 
-      - name: 安装源码
+      - name: 安装源码和插件
         run: |
-          cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
           cd openwrt
+          cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` .
+          # 执行自定义脚本
           if [ -f "${WORKPATH}/$CUSTOM_SH" ]; then
-          (
             chmod +x ${WORKPATH}/$CUSTOM_SH
             /bin/bash "${WORKPATH}/$CUSTOM_SH"
-          )
           fi
-          git clone "${{ github.event.inputs.PLUGIN_GIT }}" "${{ github.event.inputs.PLUGIN_PATH }}"
-          echo "${{ github.event.inputs.PLUGIN_CONFIG }}" >> .config
+
+          CONFIG_FILE="${GITHUB_WORKSPACE}/${{ env.PLUGIN_CONFIG_PATH }}"
+          echo "读取插件配置文件: $CONFIG_FILE"
+
+          # 清空旧编译路径文件
+          rm -f .plugin_compile_paths
+
+          # 解析 ini 文件，批量克隆插件、写配置和保存编译路径
+          for section in $(grep '^\[plugin' "$CONFIG_FILE" | sed 's/\[//;s/\]//'); do
+            GIT=$(awk -F '=' -v s="[$section]" '$0==s {found=1} found && $1~/^git/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2; exit}' "$CONFIG_FILE")
+            PATH=$(awk -F '=' -v s="[$section]" '$0==s {found=1} found && $1~/^path/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2; exit}' "$CONFIG_FILE")
+            CONFIG=$(awk -F '=' -v s="[$section]" '$0==s {found=1} found && $1~/^config/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2; exit}' "$CONFIG_FILE")
+            COMPILE=$(awk -F '=' -v s="[$section]" '$0==s {found=1} found && $1~/^compile_path/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2; exit}' "$CONFIG_FILE")
+
+            echo "处理插件: $section"
+            echo "克隆地址: $GIT"
+            echo "克隆路径: $PATH"
+            echo "配置项: $CONFIG"
+            echo "编译路径: $COMPILE"
+
+            git clone "$GIT" "$PATH"
+            echo "$CONFIG" >> .config
+            echo "$COMPILE" >> .plugin_compile_paths
+          done
+
           make defconfig
 
       - name: 下载文件
@@ -125,7 +128,17 @@ jobs:
         id: compile
         run: |
           cd openwrt
-          make ${{ github.event.inputs.PLUGIN_COMPILE_PATH }} V=s
+          if [ ! -f .plugin_compile_paths ]; then
+            echo "未找到插件编译路径文件，跳过插件编译"
+            exit 0
+          fi
+
+          while IFS= read -r compile_path || [ -n "$compile_path" ]; do
+            if [ -n "$compile_path" ]; then
+              echo "开始编译插件路径: $compile_path"
+              make "$compile_path" V=s
+            fi
+          done < .plugin_compile_paths
 
       - name: 整理插件
         id: organizer
