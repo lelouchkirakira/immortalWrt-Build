@@ -37,9 +37,8 @@ jobs:
           echo "FIRMWARE_MESSAGE=${FIRMWARE_MESSAGE}" >> $GITHUB_ENV
           echo "CUSTOM_SH=${CUSTOM_SH}" >> $GITHUB_ENV
           echo "UPLOAD_IPK=${UPLOAD_IPK}" >> $GITHUB_ENV
-          echo "CACHE_BUILD=true" >> $GITHUB_ENV
           echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{ github.event.inputs.MODEL }}" >> $GITHUB_ENV
-          echo "PLUGIN_CONFIG_PATH=build/${{ github.event.inputs.MODEL }}/packages.json" >> $GITHUB_ENV
+          echo "CONFIG_FILE=${{ github.workspace }}/build/${{ github.event.inputs.MODEL }}/packages.json" >> $GITHUB_ENV
 
       - name: 整理系统
         env:
@@ -48,7 +47,7 @@ jobs:
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
           sudo docker image prune --all --force
           sudo -E apt-get update
-          sudo -E apt-get -y install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev jq
+          sudo -E apt-get -y install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
 
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
@@ -67,7 +66,6 @@ jobs:
 
       - name: 缓存加速
         uses: xcz-ns/cachewrtbuild@main
-        if: env.CACHE_BUILD == 'true'
         with:
           ccache: "true"
           prefix: ${{ github.workspace }}/openwrt
@@ -84,11 +82,10 @@ jobs:
           cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
           cd openwrt
 
-          CONFIG_FILE="${GITHUB_WORKSPACE}/${{ env.PLUGIN_CONFIG_PATH }}"
           echo "读取插件配置文件: $CONFIG_FILE"
 
           plugin_count=$(jq length "$CONFIG_FILE")
-          # 第一次循环：批量克隆插件代码
+
           for i in $(seq 0 $((plugin_count - 1))); do
             GIT=$(jq -r ".[$i].git" "$CONFIG_FILE")
             BRANCH=$(jq -r ".[$i].branch // empty" "$CONFIG_FILE")
@@ -109,7 +106,6 @@ jobs:
             fi
           done
 
-          # 克隆完成后统一执行feeds命令
           ./scripts/feeds clean
           ./scripts/feeds update -a
           ./scripts/feeds install -a -f
@@ -117,7 +113,6 @@ jobs:
 
           rm -rf package/feeds/luci/luci-app-mosdns
 
-          # 第二次循环：写入配置和编译路径
           for i in $(seq 0 $((plugin_count - 1))); do
             CONFIG=$(jq -r ".[$i].config" "$CONFIG_FILE")
             COMPILE=$(jq -r ".[$i].compile_path" "$CONFIG_FILE")
