@@ -53,17 +53,6 @@ jobs:
         run: |
           sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
           sudo docker image prune --all --force
-
-          sudo apt-get update || {
-            echo "⚠️ apt update 失败，尝试恢复源"
-
-            sudo bash -c 'echo "deb http://archive.ubuntu.com/ubuntu jammy main universe restricted multiverse" > /etc/apt/sources.list'
-            sudo bash -c 'echo "deb http://archive.ubuntu.com/ubuntu jammy-updates main universe restricted multiverse" >> /etc/apt/sources.list'
-            sudo bash -c 'echo "deb http://archive.ubuntu.com/ubuntu jammy-security main universe restricted multiverse" >> /etc/apt/sources.list'
-
-            sudo apt-get update
-          }
-
           sudo -E apt-get -qq update
           sudo -E apt-get -qq install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev jq
 
@@ -71,9 +60,6 @@ jobs:
           sudo -E apt-get -qq clean
           sudo mkdir -p /github-builder
           sudo chown $USER:$GROUPS /github-builder
-
-          command -v awk || { echo "❌ awk 安装失败，终止构建"; exit 1; }
-
 
       - name: 下载源码
         working-directory: /github-builder
@@ -114,14 +100,14 @@ jobs:
           CONFIG_FILE="${GITHUB_WORKSPACE}/${{ env.PLUGIN_CONFIG_PATH }}"
           echo "读取插件配置文件: $CONFIG_FILE"
 
-          # 解析 ini 文件，批量克隆插件、写配置和保存编译路径
-          for section in $(grep '^\[plugin' "$CONFIG_FILE" | sed 's/\[//;s/\]//'); do
-            GIT=$(awk -F '=' -v s="[$section]" '$0==s {found=1} found && $1~/^git/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2; exit}' "$CONFIG_FILE")
-            PATH=$(awk -F '=' -v s="[$section]" '$0==s {found=1} found && $1~/^path/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2; exit}' "$CONFIG_FILE")
-            CONFIG=$(awk -F '=' -v s="[$section]" '$0==s {found=1} found && $1~/^config/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2; exit}' "$CONFIG_FILE")
-            COMPILE=$(awk -F '=' -v s="[$section]" '$0==s {found=1} found && $1~/^compile_path/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2; exit}' "$CONFIG_FILE")
+          plugin_count=$(jq length "$CONFIG_FILE")
+          for i in $(seq 0 $((plugin_count - 1))); do
+            GIT=$(jq -r ".[$i].git" "$CONFIG_FILE")
+            PATH=$(jq -r ".[$i].path" "$CONFIG_FILE")
+            CONFIG=$(jq -r ".[$i].config" "$CONFIG_FILE")
+            COMPILE=$(jq -r ".[$i].compile_path" "$CONFIG_FILE")
 
-            echo "处理插件: $section"
+            echo "处理插件: $i"
             echo "克隆地址: $GIT"
             echo "克隆路径: $PATH"
             echo "配置项: $CONFIG"
