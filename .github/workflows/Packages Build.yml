@@ -31,18 +31,13 @@ jobs:
     runs-on: ubuntu-22.04
     if: github.event.repository.owner.id == github.event.sender.id || ! github.event.sender.id
 
-    name: 编译 Packages
-    strategy:
-      matrix:
-        target: [${{ github.event.inputs.MODEL }}]
-
     steps:
       - name: Checkout 仓库
         uses: actions/checkout@v4
 
       - name: 检测脚本设置
         run: |
-          source "${GITHUB_WORKSPACE}/build/${{matrix.target}}/settings.ini"
+          source "${GITHUB_WORKSPACE}/build/${{ github.event.inputs.MODEL }}/settings.ini"
           echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
           echo "REPO_BRANCH=${REPO_BRANCH}" >> $GITHUB_ENV
           echo "FIRMWARE_MESSAGE=${FIRMWARE_MESSAGE}" >> $GITHUB_ENV
