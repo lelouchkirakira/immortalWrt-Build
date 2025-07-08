@@ -101,11 +101,6 @@ jobs:
           cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
           cd openwrt
 
-          ./scripts/feeds clean
-          ./scripts/feeds update -a
-          ./scripts/feeds install -a -f
-          ./scripts/feeds install -a -f
-
           CONFIG_FILE="${GITHUB_WORKSPACE}/${{ env.PLUGIN_CONFIG_PATH }}"
           echo "读取插件配置文件: $CONFIG_FILE"
 
@@ -128,6 +123,11 @@ jobs:
             else
               git clone "$GIT" "$PLUGIN_PATH"
             fi
+
+          ./scripts/feeds clean
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a -f
+          ./scripts/feeds install -a -f
 
             [ -n "$CONFIG" ] && echo "$CONFIG" >> .config
             [ -n "$COMPILE" ] && echo "$COMPILE" >> .plugin_compile_paths
