@@ -1,9 +1,9 @@
 [
   {
-    "name": "lucky",
-    "git": "https://github.com/sirpdboy/luci-app-lucky",
-    "path": "package/lucky",
-    "config": "CONFIG_PACKAGE_luci-app-lucky=m",
-    "compile_path": "package/lucky/luci-app-lucky/compile"
+    "name": "filebrowser",
+    "git": "https://github.com/afala2020/luci-app-filebrowser",
+    "path": "package/luci-app-filebrowser",
+    "config": "CONFIG_PACKAGE_luci-app-filebrowser=m",
+    "compile_path": "package/luci-app-filebrowser/compile"
   }
 ]
