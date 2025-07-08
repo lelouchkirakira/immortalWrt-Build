@@ -21,25 +21,14 @@ on:
         default: true
         type: boolean
 
-      PLUGIN_GIT:
-        description: "插件 Git 地址"
+      PLUGINS_MULTILINE:
+        description: |
+          插件列表（每行一个插件，格式为：git地址 路径 配置项 编译路径，中间用空格分隔）
+          示例：
+          https://github.com/kiddin9/luci-app-wizard package/luci-app-wizard CONFIG_PACKAGE_luci-app-wizard=m package/luci-app-wizard/compile
         required: true
-        default: "https://github.com/kiddin9/luci-app-wizard"
-
-      PLUGIN_PATH:
-        description: "插件克隆到的路径"
-        required: true
-        default: "package/luci-app-wizard"
-
-      PLUGIN_CONFIG:
-        description: "插件 .config 配置项"
-        required: true
-        default: "CONFIG_PACKAGE_luci-app-wizard=m"
-
-      PLUGIN_COMPILE_PATH:
-        description: "插件编译路径"
-        required: true
-        default: "package/luci-app-wizard/compile"
+        default: |
+          https://github.com/kiddin9/luci-app-wizard package/luci-app-wizard CONFIG_PACKAGE_luci-app-wizard=m package/luci-app-wizard/compile
 
 run-name: 编译 Packages
 
@@ -96,14 +85,14 @@ jobs:
           ccache: "true"
           prefix: ${{ github.workspace }}/openwrt
           mixkey: ${{ env.FIRMWARE_MESSAGE }}
-          
+
       - name: 更新时区
         id: date
         run: |
           sudo timedatectl set-timezone "$TZ"
           echo "FILE_TIME=$(date +"%m-%d %H.%M")" >> $GITHUB_ENV
 
-      - name: 安装源码
+      - name: 安装插件
         run: |
           cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
           cd openwrt
@@ -113,19 +102,32 @@ jobs:
             /bin/bash "${WORKPATH}/$CUSTOM_SH"
           )
           fi
-          git clone "${{ github.event.inputs.PLUGIN_GIT }}" "${{ github.event.inputs.PLUGIN_PATH }}"
-          echo "${{ github.event.inputs.PLUGIN_CONFIG }}" >> .config
+
+          echo "${{ github.event.inputs.PLUGINS_MULTILINE }}" | while read -r git path config compile_path; do
+            if [ -n "$git" ] && [ -n "$path" ]; then
+              echo "克隆插件：$git 到 $path"
+              git clone "$git" "$path"
+              echo "$config" >> .config
+            fi
+          done
+
           make defconfig
+          make target/linux/prepare -j$(nproc)
 
       - name: 下载文件
         run: |
-          cd openwrt && make download -j4
+          cd openwrt && make download -j$(nproc)
 
       - name: 编译插件
         id: compile
         run: |
           cd openwrt
-          make ${{ github.event.inputs.PLUGIN_COMPILE_PATH }} V=s
+          echo "${{ github.event.inputs.PLUGINS_MULTILINE }}" | while read -r git path config compile_path; do
+            if [ -n "$compile_path" ]; then
+              echo "编译插件路径：$compile_path"
+              make "$compile_path" V=s || exit 1
+            fi
+          done
 
       - name: 整理插件
         id: organizer
@@ -138,5 +140,5 @@ jobs:
         if: steps.compile.outcome == 'success' && env.UPLOAD_IPK == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.target}}_OpenWrt_package_${{ env.FILE_TIME }}
+          name: OpenWrt_package_${{ env.FILE_TIME }}
           path: ./artifact/package/
