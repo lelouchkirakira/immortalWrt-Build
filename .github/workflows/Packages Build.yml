@@ -132,6 +132,8 @@ jobs:
           ./scripts/feeds install -a -f
           ./scripts/feeds install -a -f
 
+          rm -rf package/feeds/luci/luci-app-mosdns
+
           # 第二次循环：写入配置和编译路径
           for i in $(seq 0 $((plugin_count - 1))); do
             CONFIG=$(jq -r ".[$i].config" "$CONFIG_FILE")
