@@ -63,18 +63,18 @@ jobs:
           sudo -E apt-get -qq install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
           sudo -E apt-get -qq autoremove --purge
           sudo -E apt-get -qq clean
-          sudo mkdir -p /workdir
-          sudo chown $USER:$GROUPS /workdir
+          sudo mkdir -p /github-builder
+          sudo chown $USER:$GROUPS /github-builder
 
       - name: 下载${{matrix.target}}源码
-        working-directory: /workdir
+        working-directory: /github-builder
         run: |
           df -hT $PWD
           git clone -b $REPO_BRANCH --single-branch $REPO_URL openwrt
           TOOLCHAIN_HASH=$(cd openwrt && git log --pretty=tformat:'%h' -n1 tools toolchain || echo none)
           echo "TOOLCHAIN_HASH=$TOOLCHAIN_HASH" >> $GITHUB_ENV
           echo "$TOOLCHAIN_HASH" > openwrt/.toolchain.hash
-          ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
+          ln -sf /github-builder/openwrt $GITHUB_WORKSPACE/openwrt
 
       - name: 缓存加速
         uses: xcz-ns/cachewrtbuild@main
