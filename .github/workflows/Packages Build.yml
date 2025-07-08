@@ -90,8 +90,6 @@ jobs:
             GIT=$(jq -r ".[$i].git" "$CONFIG_FILE")
             BRANCH=$(jq -r ".[$i].branch // empty" "$CONFIG_FILE")
             PLUGIN_PATH=$(jq -r ".[$i].path" "$CONFIG_FILE")
-            CONFIG=$(jq -r ".[$i].config" "$CONFIG_FILE")
-            COMPILE=$(jq -r ".[$i].compile_path" "$CONFIG_FILE")
 
             echo "克隆地址: $GIT"
             echo "分支版本: ${BRANCH:-默认}"
