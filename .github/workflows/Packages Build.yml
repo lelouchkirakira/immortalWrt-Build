@@ -103,20 +103,19 @@ jobs:
           CONFIG_FILE="${GITHUB_WORKSPACE}/${{ env.PLUGIN_CONFIG_PATH }}"
           echo "读取插件配置文件: $CONFIG_FILE"
 
-          plugin_count=$(/usr/bin/jq length "$CONFIG_FILE")
+          plugin_count=$(jq length "$CONFIG_FILE")
           for i in $(seq 0 $((plugin_count - 1))); do
-            GIT=$(/usr/bin/jq -r ".[$i].git" "$CONFIG_FILE")
-            PATH=$(/usr/bin/jq -r ".[$i].path" "$CONFIG_FILE")
-            CONFIG=$(/usr/bin/jq -r ".[$i].config" "$CONFIG_FILE")
-            COMPILE=$(/usr/bin/jq -r ".[$i].compile_path" "$CONFIG_FILE")
+            GIT=$(jq -r ".[$i].git" "$CONFIG_FILE")
+            PLUGIN_PATH=$(jq -r ".[$i].path" "$CONFIG_FILE")
+            CONFIG=$(jq -r ".[$i].config" "$CONFIG_FILE")
+            COMPILE=$(jq -r ".[$i].compile_path" "$CONFIG_FILE")
 
-            echo "处理插件: $i"
             echo "克隆地址: $GIT"
-            echo "克隆路径: $PATH"
+            echo "克隆路径: $PLUGIN_PATH"
             echo "配置项: $CONFIG"
             echo "编译路径: $COMPILE"
 
-            git clone "$GIT" "$PATH"
+            git clone "$GIT" "$PLUGIN_PATH"
             echo "$CONFIG" >> .config
             echo "$COMPILE" >> .plugin_compile_paths
           done
