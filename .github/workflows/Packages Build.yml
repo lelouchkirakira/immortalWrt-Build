@@ -1,4 +1,5 @@
 name: Packages Build
+run-name: 编译 Packages
 
 on:
   workflow_dispatch:
@@ -14,8 +15,6 @@ on:
           - Lean_Cudy_18.04
           - Lean_R3S_18.04
           - Immortalwrt_x86_64
-
-run-name: 编译 Packages
 
 env:
   TZ: Asia/Shanghai
