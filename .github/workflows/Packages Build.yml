@@ -105,6 +105,7 @@ jobs:
           echo "读取插件配置文件: $CONFIG_FILE"
 
           plugin_count=$(jq length "$CONFIG_FILE")
+          # 第一次循环：批量克隆插件代码
           for i in $(seq 0 $((plugin_count - 1))); do
             GIT=$(jq -r ".[$i].git" "$CONFIG_FILE")
             BRANCH=$(jq -r ".[$i].branch // empty" "$CONFIG_FILE")
@@ -123,11 +124,18 @@ jobs:
             else
               git clone "$GIT" "$PLUGIN_PATH"
             fi
+          done
 
+          # 克隆完成后统一执行feeds命令
           ./scripts/feeds clean
           ./scripts/feeds update -a
           ./scripts/feeds install -a -f
           ./scripts/feeds install -a -f
+
+          # 第二次循环：写入配置和编译路径
+          for i in $(seq 0 $((plugin_count - 1))); do
+            CONFIG=$(jq -r ".[$i].config" "$CONFIG_FILE")
+            COMPILE=$(jq -r ".[$i].compile_path" "$CONFIG_FILE")
 
             [ -n "$CONFIG" ] && echo "$CONFIG" >> .config
             [ -n "$COMPILE" ] && echo "$COMPILE" >> .plugin_compile_paths
