@@ -40,8 +40,11 @@ jobs:
             echo "使用手动触发传入的 MODEL: ${{ github.event.inputs.MODEL }}"
             echo "MODEL=${{ github.event.inputs.MODEL }}" >> $GITHUB_ENV
           else
-            # push 触发，从改动的 packages.json 路径中提取 MODEL 目录名
-            MODEL_DIR=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} | grep 'packages.json' | head -n1 | cut -d '/' -f2)
+            # push 触发，从改动的 packages.json 路径中提取 MODEL 目录名（倒数第二部分）
+            MODEL_DIR=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }} \
+              | grep 'packages.json' \
+              | head -n1 \
+              | awk -F'/' '{print $(NF-1)}')
             echo "自动提取到 MODEL: $MODEL_DIR"
             echo "MODEL=$MODEL_DIR" >> $GITHUB_ENV
           fi
