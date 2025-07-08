@@ -65,6 +65,7 @@ jobs:
           echo "UPLOAD_IPK=${UPLOAD_IPK}" >> $GITHUB_ENV
           echo "UPLOAD_TARGETS=true" >> $GITHUB_ENV
           echo "CACHE_BUILD=${{ inputs.CACHE_BUILD }}" >> $GITHUB_ENV
+          echo "WORKPATH=${GITHUB_WORKSPACE}/openwrt/build/${{ github.event.inputs.MODEL }}" >> $GITHUB_ENV
 
       - name: 初始化系统环境
         env:
