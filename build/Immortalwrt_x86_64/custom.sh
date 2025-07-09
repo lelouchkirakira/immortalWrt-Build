@@ -8,11 +8,12 @@
 cat feeds.conf.default
 
 # 添加第三方软件包
-git clone https://github.com/db-one/dbone-packages.git -b 23.05 package/dbone-packages
+git clone https://github.com/db-one/dbone-packages.git -b 23.05 package/dbone-packages > /dev/null
 
 # 更新并安装源
 # ./scripts/feeds clean
-./scripts/feeds update -a && ./scripts/feeds install -a -f
+./scripts/feeds update -a  > /dev/null
+./scripts/feeds install -a -f > /dev/null
 
 # 删除部分默认包
 rm -rf feeds/luci/applications/luci-app-qbittorrent
