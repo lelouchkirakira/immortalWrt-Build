@@ -18,18 +18,18 @@ cat feeds.conf.default
 
 # 添加第三方软件包
 echo "📦 正在克隆第三方软件包"
-git clone -b 24.10 https://github.com/xcz-ns/OpenWrt-Packages package/OpenWrt-Packages
+git clone -b 24.10 https://github.com/xcz-ns/OpenWrt-Packages package/OpenWrt-Packages > /dev/null
 echo "✅ 第三方软件包克隆完成"
 
 # 更新并安装源
 echo "🔄 清理旧 feeds..."
 ./scripts/feeds clean
 echo "🔄 更新所有 feeds..."
-./scripts/feeds update -a
+./scripts/feeds update -a > /dev/null
 echo "📥 安装所有 feeds（强制覆盖冲突项）..."
-./scripts/feeds install -a -f
+./scripts/feeds install -a -f > /dev/null
 echo "📥 再次安装所有 feeds（确保完整）..."
-./scripts/feeds install -a -f
+./scripts/feeds install -a -f > /dev/null
 echo "✅ feeds 更新与安装完成"
 
 # 删除部分默认包
