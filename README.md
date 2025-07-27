@@ -8,22 +8,26 @@
 
 | 序号 | 平台+设备名称                                                | 固件下载                                                     |
 | ---- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 1    | ![img](https://img.shields.io/badge/Lean-x86_18.04-32C955.svg?logo=openwrt) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_x86_64_18.04&expanded=true) |
-| 2    | ![img](https://img.shields.io/badge/Lean-R3S_18.04-32C955.svg?logo=openwrt) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_R3S_18.04&expanded=true) |
-| 3    | ![img](https://img.shields.io/badge/Lean-Cudy_TR3000_18.04-32C955.svg?logo=openwrt) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_Cudy_18.04&expanded=true) |
-| 4    | ![img](https://img.shields.io/badge/Lean-x86_24.01-32C955.svg?logo=openwrt) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_x86_64_24.01&expanded=true) |
-| 5    | ![img](https://img.shields.io/badge/ImmortalWrt-x86_24.01-32C955.svg?logo=openwrt) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=immortalwrt_x86_64&expanded=true) |
+| 1    | ![img](https://img.shields.io/badge/Lean-x86_18.04-32C955.svg?logo=openwrt&style=for-the-badge) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box&style=for-the-badge)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_x86_64_18.04&expanded=true) |
+| 2    | ![img](https://img.shields.io/badge/Lean-R3S_18.04-32C955.svg?logo=openwrt&style=for-the-badge) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box&style=for-the-badge)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_R3S_18.04&expanded=true) |
+| 3    | ![img](https://img.shields.io/badge/Lean-Cudy_TR3000_18.04-32C955.svg?logo=openwrt&style=for-the-badge) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box&style=for-the-badge)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_Cudy_18.04&expanded=true) |
+| 4    | ![img](https://img.shields.io/badge/Lean-x86_24.01-32C955.svg?logo=openwrt&style=for-the-badge) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box&style=for-the-badge)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_x86_64_24.01&expanded=true) |
+| 5    | ![img](https://img.shields.io/badge/ImmortalWrt-x86_24.01-32C955.svg?logo=openwrt&style=for-the-badge) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box&style=for-the-badge)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=immortalwrt_x86_64&expanded=true) |
+
 
 ### 🔧 源码
 
 感谢以下大佬提供的源码支持：
 
-1. 固件基础源码：[![Lede](https://img.shields.io/badge/Lede-coolsnowwolf-ff69b4.svg?style=flat&logo=appveyor)](https://github.com/coolsnowwolf/lede)
-    [![ImmortalWrt](https://img.shields.io/badge/ImmortalWrt-immortalwrt-ff69b4.svg?style=flat&logo=appveyor)](https://github.com/immortalwrt/immortalwrt)
+1. 固件基础源码：  
+[![Lede](https://img.shields.io/badge/Lede-coolsnowwolf-ff69b4.svg?style=for-the-badge&logo=appveyor)](https://github.com/coolsnowwolf/lede)  
+[![ImmortalWrt](https://img.shields.io/badge/ImmortalWrt-immortalwrt-ff69b4.svg?style=for-the-badge&logo=appveyor)](https://github.com/immortalwrt/immortalwrt)
 
-2. 插件与功能包：[![Passwall](https://img.shields.io/badge/openwrt_passwall-xiaorouji-8a2be2.svg?style=flat&logo=appveyor)](https://github.com/xiaorouji/openwrt-passwall)
-    [![281677160](https://img.shields.io/badge/openwrt_package-281677160-8a2be2.svg?style=flat&logo=appveyor)](https://github.com/281677160/openwrt-package)
+2. 插件与功能包：  
+[![Passwall](https://img.shields.io/badge/openwrt_passwall-xiaorouji-8a2be2.svg?style=for-the-badge&logo=appveyor)](https://github.com/xiaorouji/openwrt-passwall)  
+[![281677160](https://img.shields.io/badge/openwrt_package-281677160-8a2be2.svg?style=for-the-badge&logo=appveyor)](https://github.com/281677160/openwrt-package)
 
-3. 自动化脚本与流程：[![P3TERX](https://img.shields.io/badge/OpenWrt-P3TERX-orange.svg?style=flat&logo=appveyor)](https://github.com/P3TERX/Actions-OpenWrt)
-    [![db-one](https://img.shields.io/badge/OpenWrt_AutoBuild-db--one-orange.svg?style=flat&logo=appveyor)](https://github.com/db-one/OpenWrt-AutoBuild)
+3. 自动化脚本与流程：  
+[![P3TERX](https://img.shields.io/badge/OpenWrt-P3TERX-orange.svg?style=for-the-badge&logo=appveyor)](https://github.com/P3TERX/Actions-OpenWrt)  
+[![db-one](https://img.shields.io/badge/OpenWrt_AutoBuild-db--one-orange.svg?style=for-the-badge&logo=appveyor)](https://github.com/db-one/OpenWrt-AutoBuild)
 
