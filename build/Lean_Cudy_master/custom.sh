@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# 启用18.06Luci
+# 启用master Luci
 sed -i 's|^#src-git luci https://github.com/coolsnowwolf/luci$|src-git luci https://github.com/coolsnowwolf/luci|' feeds.conf.default
 sed -i 's|^src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-23.05$|#src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-23.05|' feeds.conf.default
-echo "✅ Luci 源已切换为 18.06"
+echo "✅ Luci 源已切换为 master"
 echo ""
 
 echo "📄 当前 feeds.conf.default 内容如下："

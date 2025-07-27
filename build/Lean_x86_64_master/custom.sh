@@ -6,14 +6,14 @@
 
 # 更新feeds文件
 # sed -i 's@#src-git helloworld@src-git helloworld@g' feeds.conf.default # 启用helloworld
-# sed -i 's@src-git luci@# src-git luci@g' feeds.conf.default # 禁用18.06Luci
+# sed -i 's@src-git luci@# src-git luci@g' feeds.conf.default # 禁用master Luci
 # sed -i 's@## src-git luci@src-git luci@g' feeds.conf.default # 启用23.05Luci
 # sed -i 's@;openwrt-23.05@;openwrt-24.10@g' feeds.conf.default # 启用24.10Luci
 
-# 启用18.06Luci
+# 启用master Luci
 sed -i 's|^#src-git luci https://github.com/coolsnowwolf/luci$|src-git luci https://github.com/coolsnowwolf/luci|' feeds.conf.default
 sed -i 's|^src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-23.05$|#src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-23.05|' feeds.conf.default
-echo "✅ Luci 源已切换为 18.06"
+echo "✅ Luci 源已切换为 master"
 
 echo "📄 当前 feeds.conf.default 内容如下："
 cat feeds.conf.default
