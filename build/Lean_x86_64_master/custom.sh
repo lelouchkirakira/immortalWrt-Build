@@ -331,7 +331,8 @@ cat >> .config <<EOF
 CONFIG_PACKAGE_luci-app-filebrowser=y               # 文件浏览器
 CONFIG_PACKAGE_luci-app-ddns=y                      # DDNS 服务
 CONFIG_PACKAGE_luci-app-filetransfer=y              # 系统 - 文件传输
-CONFIG_PACKAGE_luci-app-wol=y                       # 网络唤醒
+#CONFIG_PACKAGE_luci-app-wol=y                       # 网络唤醒
+CONFIG_PACKAGE_luci-app-wolplus=y                   # 网络唤醒
 CONFIG_PACKAGE_luci-app-diskman=y                   # 磁盘管理 / 磁盘信息
 CONFIG_PACKAGE_luci-app-ttyd=y                      # ttyd 终端
 CONFIG_PACKAGE_luci-app-wireguard=y                 # WireGuard 客户端
