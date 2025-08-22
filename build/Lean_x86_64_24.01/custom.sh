@@ -288,7 +288,7 @@ cat >> .config <<EOF
 CONFIG_PACKAGE_luci-app-poweroff=y #关机（增加关机功能）
 CONFIG_PACKAGE_luci-app-openclash=y #OpenClash客户端
 CONFIG_PACKAGE_luci-app-argon-config=y #argon主题设置
-CONFIG_PACKAGE_luci-app-oaf=y #应用过滤
+#CONFIG_PACKAGE_luci-app-oaf=y #应用过滤
 #
 CONFIG_PACKAGE_luci-app-nikki=n #nikki 客户端
 CONFIG_PACKAGE_luci-app-serverchan=n #微信推送

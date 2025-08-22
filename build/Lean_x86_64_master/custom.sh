@@ -331,7 +331,6 @@ cat >> .config <<EOF
 CONFIG_PACKAGE_luci-app-filebrowser=y               # 文件浏览器
 CONFIG_PACKAGE_luci-app-ddns=y                      # DDNS 服务
 CONFIG_PACKAGE_luci-app-filetransfer=y              # 系统 - 文件传输
-#CONFIG_PACKAGE_luci-app-wol=y                       # 网络唤醒
 CONFIG_PACKAGE_luci-app-wolplus=y                   # 网络唤醒
 CONFIG_PACKAGE_luci-app-diskman=y                   # 磁盘管理 / 磁盘信息
 CONFIG_PACKAGE_luci-app-ttyd=y                      # ttyd 终端
@@ -340,6 +339,7 @@ CONFIG_PACKAGE_luci-proto-wireguard=y               # WireGuard 协议支持
 CONFIG_PACKAGE_luci-app-store=y                     # Store 应用商店
 CONFIG_PACKAGE_luci-app-uhttpd=y                    # uhttpd 管理界面
 
+CONFIG_PACKAGE_luci-app-wol=n                       # 网络唤醒
 CONFIG_PACKAGE_luci-app-gowebdav=n                  # GoWebDAV 文件访问
 CONFIG_PACKAGE_luci-app-lucky=n                     # lucky 定时任务
 CONFIG_PACKAGE_luci-app-accesscontrol=n             # 上网时间控制
