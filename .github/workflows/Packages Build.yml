@@ -8,12 +8,12 @@ on:
         required: true
         description: 选择需要编译的固件
         type: choice
-        default: Lean_x86_64_18.04
+        default: Lean_x86_64_master
         options:
-          - Lean_x86_64_18.04
+          - Lean_x86_64_master
           - Lean_x86_64_24.01
-          - Lean_Cudy_18.04
-          - Lean_R3S_18.04
+          - Lean_Cudy_master
+          - Lean_R3S_master
           - Immortalwrt_x86_64
 
 env:

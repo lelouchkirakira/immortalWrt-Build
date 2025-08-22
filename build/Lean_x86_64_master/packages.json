@@ -1,9 +1,9 @@
 [
   {
-    "name": "filebrowser",
-    "git": "https://github.com/afala2020/luci-app-filebrowser",
-    "path": "package/luci-app-filebrowser",
-    "config": "CONFIG_PACKAGE_luci-app-filebrowser=m",
-    "compile_path": "package/luci-app-filebrowser/compile"
+    "name": "luci-app-wolplus",
+    "git": "https://github.com/animegasan/luci-app-wolplus",
+    "path": "package/luci-app-wolplus",
+    "config": "CONFIG_PACKAGE_luci-app-wolplus=m",
+    "compile_path": "package/luci-app-wolplus/compile"
   }
 ]
