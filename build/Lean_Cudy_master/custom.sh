@@ -1,9 +1,7 @@
 #!/bin/bash
 
-# 启用master Luci
-sed -i 's|^#src-git luci https://github.com/coolsnowwolf/luci$|src-git luci https://github.com/coolsnowwolf/luci|' feeds.conf.default
-sed -i 's|^src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-24.10$|#src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-24.10|' feeds.conf.default
-sed -i 's|^src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-23.05$|#src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-23.05|' feeds.conf.default
+# 启用 master Luci
+sed -i '/src-git luci .*23\.05/d; /src-git luci .*24\.10/d; s|^#\s*\(src-git luci.*\)|\1|' feeds.conf.default
 echo "✅ Luci 源已切换为 master"
 echo ""
 
