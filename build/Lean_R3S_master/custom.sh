@@ -282,7 +282,7 @@ CONFIG_PACKAGE_luci-app-store=y                     # Store 应用商店
 CONFIG_PACKAGE_luci-app-uhttpd=y                    # uhttpd 管理界面
 CONFIG_PACKAGE_luci-app-wol=y                       # 网络唤醒
 CONFIG_PACKAGE_luci-app-dockerman=y                 # Docker 管理
-CONFIG_PACKAGE_luci-app-wrtbwmon=n                  # 实时流量监控
+CONFIG_PACKAGE_luci-app-wrtbwmon=y                  # 实时流量监控
 
 CONFIG_PACKAGE_luci-app-cpufreq=n                   # cpufreq
 CONFIG_PACKAGE_luci-app-sqm=n                       # SQM 智能队列管理
