@@ -405,6 +405,7 @@ CONFIG_HAS_FPU=y                         # 设备支持硬件浮点单元 (FPU)�
 CONFIG_PACKAGE_lvm2=y                    # 安装 LVM2 工具集（包含 pvcreate/vgcreate/lvcreate 等命令）
 CONFIG_PACKAGE_kmod-dm=y                 # 启用 Device Mapper 内核支持（含 dm-mod，LVM 的核心内核依赖）
 CONFIG_PACKAGE_libdevmapper=y            # 安装 libdevmapper 动态链接库，供 lvm2 命令工具使用
+CONFIG_PACKAGE_libudev-zero=y
 EOF
 
 sed -i 's/^[ \t]*//g' ./.config

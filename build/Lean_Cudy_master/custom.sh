@@ -329,6 +329,7 @@ cat >> .config <<EOF
 CONFIG_PACKAGE_kmod-usb-net=y
 CONFIG_PACKAGE_kmod-usb-net-rndis=y
 CONFIG_PACKAGE_kmod-usb-net-cdc-ether=y
+CONFIG_PACKAGE_libudev-zero=y
 EOF
 
 
