@@ -40,21 +40,10 @@ rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf package/feeds/luci/luci-theme-argon
 echo "✅ 默认包删除完成"
 
+
 # 自定义定制选项
 NET="package/base-files/luci2/bin/config_generate"
 ZZZ="package/lean/default-settings/files/zzz-default-settings"
-# --- 修改内核版本 ---
-# 你的需求是固定使用 6.1 内核。
-# 我们直接使用 sed 命令修改 Makefile 文件来指定 KERNEL_PATCHVER 为 6.1
-DESIRED_KERNEL_VER="6.1"
-MAKEFILE_PATH="target/linux/rockchip/Makefile"
-# 这行命令会查找 KERNEL_PATCHVER:=... 这一行，并将其值修改为 6.1
-sed -i "s/^\(KERNEL_PATCHVER:=\).*/\1$DESIRED_KERNEL_VER/" $MAKEFILE_PATH
-echo "内核版本已强制设置为 $DESIRED_KERNEL_VER"
-
-# 自定义定制选项
-# NET="package/base-files/luci2/bin/config_generate"
-# ZZZ="package/lean/default-settings/files/zzz-default-settings"
 # 读取内核版本
 # KERNEL_PATCHVER=$(cat target/linux/rockchip/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')
 # KERNEL_TESTING_PATCHVER=$(cat target/linux/rockchip/Makefile|grep KERNEL_TESTING_PATCHVER | sed 's/^.\{25\}//g')
