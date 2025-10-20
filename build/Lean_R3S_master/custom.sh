@@ -9,11 +9,13 @@ echo "📄 当前 feeds.conf.default 内容如下："
 cat feeds.conf.default
 
 # 添加第三方软件包
+echo ""
 echo "📦 正在克隆第三方软件包"
 git clone https://github.com/xcz-ns/OpenWrt-Packages package/OpenWrt-Packages > /dev/null
 echo "✅ 第三方软件包克隆完成"
 
 # 更新并安装源
+echo ""
 echo "🔄 清理旧 feeds..."
 ./scripts/feeds clean > /dev/null
 echo "🔄 更新所有 feeds..."
@@ -24,8 +26,8 @@ echo "📥 再次安装所有 feeds（确保完整）..."
 ./scripts/feeds install -a -f > /dev/null
 echo "✅ feeds 更新与安装完成"
 
-
 # 删除部分默认包
+echo ""
 echo "🧹 删除部分默认包"
 rm -rf feeds/luci/applications/luci-app-qbittorrent
 rm -rf package/feeds/luci/luci-app-qbittorrent
@@ -40,29 +42,75 @@ rm -rf feeds/luci/themes/luci-theme-argon
 rm -rf package/feeds/luci/luci-theme-argon
 echo "✅ 默认包删除完成"
 
+# ----------------------------------------------------------
+# 🧠 读取内核版本并决定是否切换为测试版
+# ----------------------------------------------------------
+echo ""
+echo "🧠 正在检测内核版本..."
+KERNEL_FILE="target/linux/rockchip/Makefile"
 
+if [ -f "$KERNEL_FILE" ]; then
+    KERNEL_PATCHVER=$(grep -E "^KERNEL_PATCHVER:=" "$KERNEL_FILE" | sed 's/^KERNEL_PATCHVER:=//g')
+    KERNEL_TESTING_PATCHVER=$(grep -E "^KERNEL_TESTING_PATCHVER:=" "$KERNEL_FILE" | sed 's/^KERNEL_TESTING_PATCHVER:=//g')
+    
+    echo "🔍 当前主线版本：$KERNEL_PATCHVER"
+    echo "🧪 测试内核版本：$KERNEL_TESTING_PATCHVER"
+
+    # 若测试版高于主线版，则切换为最新测试内核
+    if [[ "$KERNEL_TESTING_PATCHVER" > "$KERNEL_PATCHVER" ]]; then
+        sed -i "s/$KERNEL_PATCHVER/$KERNEL_TESTING_PATCHVER/g" "$KERNEL_FILE"
+        echo "✅ 内核版本已更新为 $KERNEL_TESTING_PATCHVER"
+        KERNEL_PATCHVER=$KERNEL_TESTING_PATCHVER
+    else
+        echo "✅ 当前内核版本已是最新，无需修改"
+    fi
+else
+    echo "⚠️ 未找到 Rockchip 内核 Makefile，跳过内核检测"
+fi
+
+# ----------------------------------------------------------
+# ⚙️ 修复 mt76 驱动与高版本内核不兼容问题
+# ----------------------------------------------------------
+echo ""
+echo "⚙️ 检测内核版本并根据需要替换 mt76 驱动..."
+
+# 只在内核 >= 6.10 时执行替换（低版本不动）
+if [[ "$KERNEL_PATCHVER" == 6.1* || "$KERNEL_PATCHVER" == 5.* ]]; then
+    echo "🧩 当前内核 $KERNEL_PATCHVER 不需要替换 mt76"
+else
+    echo "🛠️ 当前内核 $KERNEL_PATCHVER 需要更新 mt76 驱动..."
+    MT76_PATH="package/kernel/mt76"
+    if [ -d "$MT76_PATH" ]; then
+        echo "🗑️ 删除旧版 mt76..."
+        rm -rf "$MT76_PATH"
+    fi
+    echo "🌐 从 OpenWrt 官方仓库拉取最新 mt76..."
+    git clone https://github.com/openwrt/mt76.git "$MT76_PATH" --depth=1 > /dev/null 2>&1
+
+    if [ $? -eq 0 ]; then
+        echo "✅ mt76 已成功更新为最新版（兼容 Linux $KERNEL_PATCHVER）"
+    else
+        echo "❌ 拉取 mt76 失败，请检查网络连接或 GitHub 访问状态"
+        exit 1
+    fi
+fi
+
+# ----------------------------------------------------------
 # 自定义定制选项
+# ----------------------------------------------------------
 NET="package/base-files/luci2/bin/config_generate"
 ZZZ="package/lean/default-settings/files/zzz-default-settings"
-# 读取内核版本
-# KERNEL_PATCHVER=$(cat target/linux/rockchip/Makefile|grep KERNEL_PATCHVER | sed 's/^.\{17\}//g')
-# KERNEL_TESTING_PATCHVER=$(cat target/linux/rockchip/Makefile|grep KERNEL_TESTING_PATCHVER | sed 's/^.\{25\}//g')
-# if [[ $KERNEL_TESTING_PATCHVER > $KERNEL_PATCHVER ]]; then
-#   sed -i "s/$KERNEL_PATCHVER/$KERNEL_TESTING_PATCHVER/g" target/linux/rockchip/Makefile        # 修改内核版本为最新
-#   echo "内核版本已更新为 $KERNEL_TESTING_PATCHVER"
-# else
-#   echo "内核版本不需要更新"
-# fi
-
-# ●●●●●●●●●●●●●●●●●●●●●●●●定制部分●●●●●●●●●●●●●●●●●●●●●●●● #
 
 # ===================== 个性化部分 =======================
 sed -i 's#192.168.1.1#192.168.0.1#g' $NET                                          # 定制默认 IP 地址
 sed -i 's#LEDE#OpenWrt#g' $NET                                                     # 修改默认主机名为 OpenWrt
 sed -i "s/LEDE /Built on $(TZ=UTC-8 date "+%Y.%m.%d") @ LEDE /g" $ZZZ              # 增加编译日期个性标识
-sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm                                            # 修改默认时间格式
+sed -i 's#localtime  = os.date()#localtime  = os.date("%Y年%m月%d日") .. " " .. translate(os.date("%A")) .. " " .. os.date("%X")#g' package/lean/autocore/files/*/index.htm  # 修改默认时间格式
 sed -i 's#%D %V, %C#%D %V, %C Lean_R3S#g' package/base-files/files/etc/banner      # 自定义banner显示
-echo "uci set luci.main.mediaurlbase=/luci-static/design" >> $ZZZ                  # 设置默认主题为 argon（如编译器强制覆盖可能失效）
+echo "uci set luci.main.mediaurlbase=/luci-static/design" >> $ZZZ                  # 设置默认主题为 design（如编译器强制覆盖可能失效）
+
+echo ""
+echo "✅ 所有定制与修复步骤已完成！"
 
 # ====================== 性能跑分 ========================
 echo "rm -f /etc/uci-defaults/xxx-coremark" >> "$ZZZ"
