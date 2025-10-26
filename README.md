@@ -12,9 +12,9 @@
 
 | 序号 | 型号 | 源码 | luci分支 | 固件下载 |
 | ---- | ---- | ---- | -------- | -------- |
-| 1 | ![img](https://img.shields.io/badge/型号-X86-FFA500.svg?logo=openwrt&style=flat) | ![img](https://img.shields.io/badge/源码-Lean-FFA500.svg?logo=github&style=flat) | ![img](https://img.shields.io/badge/luci-master-FFA500.svg?logo=lua&style=flat) | [![img](https://img.shields.io/badge/固件下载-链接-FFA500.svg?logo=download&style=flat)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_x86_64_master&expanded=true) |
-| 2 | ![img](https://img.shields.io/badge/型号-R3S-FFA500.svg?logo=openwrt&style=flat) | ![img](https://img.shields.io/badge/源码-Lean-FFA500.svg?logo=github&style=flat) | ![img](https://img.shields.io/badge/luci-master-FFA500.svg?logo=lua&style=flat) | [![img](https://img.shields.io/badge/固件下载-链接-FFA500.svg?logo=download&style=flat)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_R3S_master&expanded=true) |
-| 3 | ![img](https://img.shields.io/badge/型号-Cudy__TR3000-FFA500.svg?logo=openwrt&style=flat) | ![img](https://img.shields.io/badge/源码-Lean-FFA500.svg?logo=github&style=flat) | ![img](https://img.shields.io/badge/luci-master-FFA500.svg?logo=lua&style=flat) | [![img](https://img.shields.io/badge/固件下载-链接-FFA500.svg?logo=download&style=flat)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_Cudy_master&expanded=true) |
+| 1 | ![img](https://img.shields.io/badge/型号-X86-00BFFF.svg?logo=openwrt&style=flat) | ![img](https://img.shields.io/badge/源码-Lean-00BFFF.svg?logo=github&style=flat) | ![img](https://img.shields.io/badge/luci-master-00BFFF.svg?logo=lua&style=flat) | [![img](https://img.shields.io/badge/固件下载-链接-00BFFF.svg?logo=download&style=flat)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_x86_64_master&expanded=true) |
+| 2 | ![img](https://img.shields.io/badge/型号-R3S-00BFFF.svg?logo=openwrt&style=flat) | ![img](https://img.shields.io/badge/源码-Lean-00BFFF.svg?logo=github&style=flat) | ![img](https://img.shields.io/badge/luci-master-00BFFF.svg?logo=lua&style=flat) | [![img](https://img.shields.io/badge/固件下载-链接-00BFFF.svg?logo=download&style=flat)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_R3S_master&expanded=true) |
+| 3 | ![img](https://img.shields.io/badge/型号-Cudy__TR3000-00BFFF.svg?logo=openwrt&style=flat) | ![img](https://img.shields.io/badge/源码-Lean-00BFFF.svg?logo=github&style=flat) | ![img](https://img.shields.io/badge/luci-master-00BFFF.svg?logo=lua&style=flat) | [![img](https://img.shields.io/badge/固件下载-链接-00BFFF.svg?logo=download&style=flat)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_Cudy_master&expanded=true) |
 
 ---
 
@@ -23,16 +23,16 @@
 感谢以下优秀项目与开发者提供的源码、插件与自动化支持：
 
 #### 📦 固件基础源码
-[![Lede](https://img.shields.io/badge/Lede-coolsnowwolf-FFA500.svg?logo=github&style=flat)](https://github.com/coolsnowwolf/lede)
-[![ImmortalWrt](https://img.shields.io/badge/ImmortalWrt-immortalwrt-FFA500.svg?logo=github&style=flat)](https://github.com/immortalwrt/immortalwrt)
+[![Lede](https://img.shields.io/badge/Lede-coolsnowwolf-00BFFF.svg?logo=github&style=flat)](https://github.com/coolsnowwolf/lede)
+[![ImmortalWrt](https://img.shields.io/badge/ImmortalWrt-immortalwrt-00BFFF.svg?logo=github&style=flat)](https://github.com/immortalwrt/immortalwrt)
 
 #### 🔌 插件与功能包
-[![Passwall](https://img.shields.io/badge/openwrt_passwall-xiaorouji-FFA500.svg?logo=github&style=flat)](https://github.com/xiaorouji/openwrt-passwall)
-[![281677160](https://img.shields.io/badge/openwrt_package-281677160-FFA500.svg?logo=github&style=flat)](https://github.com/281677160/openwrt-package)
+[![Passwall](https://img.shields.io/badge/openwrt_passwall-xiaorouji-00BFFF.svg?logo=github&style=flat)](https://github.com/xiaorouji/openwrt-passwall)
+[![281677160](https://img.shields.io/badge/openwrt_package-281677160-00BFFF.svg?logo=github&style=flat)](https://github.com/281677160/openwrt-package)
 
 #### ⚙️ 自动化构建脚本
-[![P3TERX](https://img.shields.io/badge/OpenWrt-P3TERX-FFA500.svg?logo=github&style=flat)](https://github.com/P3TERX/Actions-OpenWrt)
-[![db-one](https://img.shields.io/badge/OpenWrt_AutoBuild-db--one-FFA500.svg?logo=github&style=flat)](https://github.com/db-one/OpenWrt-AutoBuild)
+[![P3TERX](https://img.shields.io/badge/OpenWrt-P3TERX-00BFFF.svg?logo=github&style=flat)](https://github.com/P3TERX/Actions-OpenWrt)
+[![db-one](https://img.shields.io/badge/OpenWrt_AutoBuild-db--one-00BFFF.svg?logo=github&style=flat)](https://github.com/db-one/OpenWrt-AutoBuild)
 
 ---
 
