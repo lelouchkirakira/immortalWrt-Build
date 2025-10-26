@@ -55,7 +55,7 @@ jobs:
       fail-fast: false
       matrix:
         target: ${{ fromJSON(
-          github.event_name == 'schedule' && '["Lean_R3S_master","Lean_Cudy_master","Lean_x86_64_master","Lean_x86_64_24.01","Immortalwrt_x86_64"]' ||
+          github.event_name == 'schedule' && '["Lean_R3S_master","Lean_Cudy_master","Lean_x86_64_master"]' ||
           format('["{0}"]', github.event.inputs.MODEL )
           )}}
 
@@ -459,7 +459,7 @@ jobs:
         uses: shidahuilang/delete-older-releases@main
         if: steps.compile.outcome == 'success' && env.UPLOAD_RELEASE == 'true'
         with:
-          keep_latest: 5 #保留多少个releases不删除
+          keep_latest: 15 #保留多少个releases不删除
           delete_tags: true
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
