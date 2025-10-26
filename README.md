@@ -6,12 +6,11 @@
 
 以下设备型号为本人自用，已稳定运行。
 
-| 序号 | 平台+设备名称                                                | 固件下载                                                     |
-| ---- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| 1    | ![img](https://img.shields.io/badge/Lean-x86__master-32C955.svg?logo=openwrt&style=for-the-badge) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box&style=for-the-badge)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_x86_64_master&expanded=true) |
-| 2    | ![img](https://img.shields.io/badge/Lean-R3S__master-32C955.svg?logo=openwrt&style=for-the-badge) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box&style=for-the-badge)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_R3S_master&expanded=true) |
-| 3    | ![img](https://img.shields.io/badge/Lean-Cudy__TR3000__master-32C955.svg?logo=openwrt&style=for-the-badge) | [![img](https://img.shields.io/badge/%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-blueviolet.svg?logo=hack-the-box&style=for-the-badge)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_Cudy_master&expanded=true) |
-
+| 序号 | 型号                                                         | 源码                                                         | luci分支                                                     | 固件下载                                                     |
+| ---- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 1    | ![img](https://img.shields.io/badge/%E5%9E%8B%E5%8F%B7-X86-FFA500.svg?logo=openwrt&style=for-the-badge) | ![img](https://img.shields.io/badge/%E6%BA%90%E7%A0%81-Lean-FFA500.svg?logo=github&style=for-the-badge) | ![img](https://img.shields.io/badge/luci-master-FFA500.svg?logo=lua&style=for-the-badge) | [![img](https://img.shields.io/badge/%E5%9B%BA%E4%BB%B6%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-FFA500.svg?logo=download&style=for-the-badge)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_x86_64_master&expanded=true) |
+| 2    | ![img](https://img.shields.io/badge/%E5%9E%8B%E5%8F%B7-R3S-FFA500.svg?logo=openwrt&style=for-the-badge) | ![img](https://img.shields.io/badge/%E6%BA%90%E7%A0%81-Lean-FFA500.svg?logo=github&style=for-the-badge) | ![img](https://img.shields.io/badge/luci-master-FFA500.svg?logo=lua&style=for-the-badge) | [![img](https://img.shields.io/badge/%E5%9B%BA%E4%BB%B6%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-FFA500.svg?logo=download&style=for-the-badge)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_R3S_master&expanded=true) |
+| 3    | ![img](https://img.shields.io/badge/%E5%9E%8B%E5%8F%B7-Cudy__TR3000-FFA500.svg?logo=openwrt&style=for-the-badge) | ![img](https://img.shields.io/badge/%E6%BA%90%E7%A0%81-Lean-FFA500.svg?logo=github&style=for-the-badge) | ![img](https://img.shields.io/badge/luci-master-FFA500.svg?logo=lua&style=for-the-badge) | [![img](https://img.shields.io/badge/%E5%9B%BA%E4%BB%B6%E4%B8%8B%E8%BD%BD-%E9%93%BE%E6%8E%A5-FFA500.svg?logo=download&style=for-the-badge)](https://github.com/xcz-ns/OpenWrt-Build/releases?q=Lean_Cudy_master&expanded=true) |
 
 ### 🔧 源码
 
