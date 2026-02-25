@@ -65,6 +65,31 @@ fi
 echo ""
 
 # ============================================================
+# ★★★ 修复：ImmortalWrt 24.10 sysupgrade 掉入 initramfs 问题 ★★★
+# ============================================================
+# ImmortalWrt 24.10.0 platform.sh 中可能缺少 cudy,tr3000-v1-ubootmod
+# 的 UBI 分区定义，导致 sysupgrade 后无法正常启动（GitHub Issue #1732）
+# 此补丁在编译阶段预防性修复该问题
+PLATFORM_SH="target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh"
+if [ -f "$PLATFORM_SH" ]; then
+    if ! grep -q "cudy,tr3000-v1-ubootmod" "$PLATFORM_SH"; then
+        echo "🔧 修补 platform.sh：添加 ubootmod sysupgrade 分区定义..."
+        # 在 cudy,tr3000-v1) 行之后添加 ubootmod 的条目
+        sed -i '/cudy,tr3000-v1)/a\	cudy,tr3000-v1-ubootmod|\\' "$PLATFORM_SH"
+        echo "✅ platform.sh 修补完成"
+        echo "   验证修补结果："
+        grep -n "cudy,tr3000" "$PLATFORM_SH"
+    else
+        echo "✅ platform.sh 已包含 ubootmod 定义，无需修补"
+    fi
+else
+    echo "⚠️  platform.sh 未找到: $PLATFORM_SH"
+    echo "   可能的替代路径："
+    find target/linux/mediatek/ -path "*/lib/upgrade/platform.sh" 2>/dev/null
+fi
+echo ""
+
+# ============================================================
 # 创建 .config 编译配置文件
 # ============================================================
 cd $WORKPATH
