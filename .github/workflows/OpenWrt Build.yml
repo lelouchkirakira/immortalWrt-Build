@@ -256,11 +256,9 @@ jobs:
         run: mkdir -p $GITHUB_WORKSPACE/openwrt/.ssh
 
       - name: SSH远程连接服务器
-        uses: db-one/debugger-action@main
+        uses: mxschmitt/action-tmate@v3
         if: env.SSH_ACTIONS == 'true' || (github.event.inputs.SSH_ACTION == 'true')
-        env:
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        timeout-minutes: 60
 
       - name: 输出编译信息
         run: |
