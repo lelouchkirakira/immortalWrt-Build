@@ -14,6 +14,7 @@ on:
           - Lean_x86_64_24.01
           - Lean_Cudy_master
           - Immortalwrt_x86_64
+          - Immortalwrt_Cudy_2410
 
       CACHE_BUILD:
         description: "缓存加速"
