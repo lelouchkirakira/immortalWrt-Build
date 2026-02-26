@@ -48,14 +48,18 @@ echo ""
 DTS_FILE="target/linux/mediatek/dts/mt7981b-cudy-tr3000-v1-ubootmod.dts"
 
 if [ -f "$DTS_FILE" ]; then
-    echo "🔧 正在修改 DTS 以实现 112MB 大分区..."
-    # 查找 UBI 分区的 reg 定义并扩大
-    # 常见默认值可能是 0x7000000 (~112MB) 或更小
-    # 将其设置为 0x7200000 (~114MB)，或 0x7a40000 (~122MB 最大化)
-    # 这里用 0x7000000 (112MB) 作为安全值
-    sed -i 's/reg = <0x[0-9a-fA-F]* 0x[0-9a-fA-F]*>;/reg = <0x580000 0x7000000>;/g' "$DTS_FILE"
-    echo "✅ DTS 修改完成，UBI 分区约 112MB"
-    echo "   修改后的分区定义："
+    echo "🔧 正在确认 DTS UBI 分区大小..."
+    # padavanonly 参考值: reg = <0x5c0000 0x7000000> (起始 0x5c0000, 大小 112MB)
+    # 重要：起始地址必须是 0x5c0000（bdinfo + FIP 之后），不是 0x580000
+    # 只修改 ubi 节点内的 reg，不影响其他分区
+    if grep -q "ubi" "$DTS_FILE"; then
+        # 替换 ubi 节点中的 reg 值为正确的 112MB 布局
+        sed -i '/&ubi/,/};/{s/reg = <0x[0-9a-fA-F]* 0x[0-9a-fA-F]*>/reg = <0x5c0000 0x7000000>/}' "$DTS_FILE"
+        echo "✅ DTS UBI 分区已设置为 112MB (起始 0x5c0000, 大小 0x7000000)"
+    else
+        echo "⚠️  DTS 中未找到 ubi 节点，跳过修改"
+    fi
+    echo "   当前 DTS 分区定义："
     grep -n "reg = " "$DTS_FILE" | tail -5
 else
     echo "⚠️  DTS 文件未找到: $DTS_FILE"
