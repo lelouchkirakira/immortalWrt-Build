@@ -236,15 +236,7 @@ cat >> .config <<EOF
 CONFIG_PACKAGE_kmod-tun=y
 CONFIG_PACKAGE_kmod-macvlan=y
 CONFIG_PACKAGE_kmod-wireguard=y
-CONFIG_PACKAGE_kmod-gre=y
-CONFIG_PACKAGE_kmod-gre6=y
 CONFIG_PACKAGE_kmod-sit=y
-CONFIG_PACKAGE_kmod-ip6-tunnel=y
-CONFIG_PACKAGE_kmod-iptunnel=y
-CONFIG_PACKAGE_kmod-iptunnel4=y
-CONFIG_PACKAGE_kmod-iptunnel6=y
-CONFIG_PACKAGE_kmod-udptunnel4=y
-CONFIG_PACKAGE_kmod-udptunnel6=y
 CONFIG_PACKAGE_kmod-inet-diag=y
 CONFIG_PACKAGE_kmod-inet-mptcp-diag=y
 CONFIG_PACKAGE_kmod-netlink-diag=y
@@ -277,34 +269,8 @@ CONFIG_PACKAGE_kmod-ipt-rpfilter=y
 CONFIG_PACKAGE_kmod-ipt-nflog=y
 CONFIG_PACKAGE_kmod-ipt-nfqueue=y
 CONFIG_PACKAGE_kmod-ipt-hashlimit=y
-CONFIG_PACKAGE_kmod-ipt-physdev=y
-CONFIG_PACKAGE_kmod-ipt-u32=y
-CONFIG_PACKAGE_kmod-ipt-checksum=y
-CONFIG_PACKAGE_kmod-ipt-cluster=y
-CONFIG_PACKAGE_kmod-ipt-compat-xtables=y
-CONFIG_PACKAGE_kmod-ipt-condition=y
-CONFIG_PACKAGE_kmod-ipt-debug=y
-CONFIG_PACKAGE_kmod-ipt-delude=y
 CONFIG_PACKAGE_kmod-ipt-dhcpmac=y
-CONFIG_PACKAGE_kmod-ipt-dnetmap=y
-CONFIG_PACKAGE_kmod-ipt-fuzzy=y
-CONFIG_PACKAGE_kmod-ipt-geoip=y
-CONFIG_PACKAGE_kmod-ipt-iface=y
-CONFIG_PACKAGE_kmod-ipt-ipmark=y
-CONFIG_PACKAGE_kmod-ipt-ipp2p=y
-CONFIG_PACKAGE_kmod-ipt-ipv4options=y
-CONFIG_PACKAGE_kmod-ipt-led=y
-CONFIG_PACKAGE_kmod-ipt-length2=y
-CONFIG_PACKAGE_kmod-ipt-logmark=y
-CONFIG_PACKAGE_kmod-ipt-lscan=y
-CONFIG_PACKAGE_kmod-ipt-lua=y
-CONFIG_PACKAGE_kmod-ipt-proto=y
-CONFIG_PACKAGE_kmod-ipt-psd=y
-CONFIG_PACKAGE_kmod-ipt-quota2=y
 CONFIG_PACKAGE_kmod-ipt-tarpit=y
-CONFIG_PACKAGE_kmod-ipt-account=y
-CONFIG_PACKAGE_kmod-ipt-asn=y
-CONFIG_PACKAGE_kmod-ipt-chaos=y
 EOF
 
 # --- nftables 模块 ---
@@ -356,20 +322,10 @@ CONFIG_PACKAGE_kmod-fs-ext4=y
 CONFIG_PACKAGE_kmod-fs-vfat=y
 CONFIG_PACKAGE_kmod-fs-ntfs3=y
 CONFIG_PACKAGE_kmod-fs-exfat=y
-CONFIG_PACKAGE_kmod-fs-f2fs=y
-CONFIG_PACKAGE_kmod-fs-btrfs=y
 CONFIG_PACKAGE_kmod-fs-squashfs=y
 CONFIG_PACKAGE_kmod-fs-cifs=y
 CONFIG_PACKAGE_kmod-fs-smbfs-common=y
-CONFIG_PACKAGE_kmod-fs-nfs=y
-CONFIG_PACKAGE_kmod-fs-nfs-common=y
-CONFIG_PACKAGE_kmod-fs-nfs-v3=y
-CONFIG_PACKAGE_kmod-fs-nfs-v4=y
-CONFIG_PACKAGE_kmod-fs-netfs=y
-CONFIG_PACKAGE_kmod-fs-fscache=y
-CONFIG_PACKAGE_kmod-fs-exportfs=y
 CONFIG_PACKAGE_kmod-fs-configfs=y
-CONFIG_PACKAGE_kmod-fs-autofs4=y
 CONFIG_PACKAGE_kmod-fuse=y
 EOF
 
@@ -398,43 +354,11 @@ CONFIG_PACKAGE_kmod-usb-storage-extras=y
 CONFIG_PACKAGE_kmod-usb-storage-uas=y
 EOF
 
-# --- USB 网卡 ---
-cat >> .config <<EOF
-CONFIG_PACKAGE_kmod-usb-net=y
-CONFIG_PACKAGE_kmod-usb-net-rndis=y
-CONFIG_PACKAGE_kmod-usb-net-cdc-ether=y
-CONFIG_PACKAGE_kmod-usb-net-cdc-ncm=y
-CONFIG_PACKAGE_kmod-usb-net-cdc-mbim=y
-CONFIG_PACKAGE_kmod-usb-net-huawei-cdc-ncm=y
-CONFIG_PACKAGE_kmod-usb-net-qmi-wwan=y
-CONFIG_PACKAGE_kmod-usb-net-qmi-wwan-fibocom=y
-CONFIG_PACKAGE_kmod-usb-net-qmi-wwan-quectel=y
-CONFIG_PACKAGE_kmod-usb-net-asix=y
-CONFIG_PACKAGE_kmod-usb-net-asix-ax88179=y
-CONFIG_PACKAGE_kmod-usb-net-aqc111=y
-CONFIG_PACKAGE_kmod-usb-net-hso=y
-CONFIG_PACKAGE_kmod-usb-net-ipheth=y
-CONFIG_PACKAGE_kmod-usb-net-lan78xx=y
-CONFIG_PACKAGE_kmod-usb-net-rtl8152=y
-CONFIG_PACKAGE_kmod-usb-net-sierrawireless=y
-CONFIG_PACKAGE_kmod-usb-net-smsc75xx=y
-CONFIG_PACKAGE_kmod-usb-net-smsc95xx=y
 EOF
 
-# --- USB 串口 ---
+# --- USB 串口核心 ---
 cat >> .config <<EOF
 CONFIG_PACKAGE_kmod-usb-acm=y
-CONFIG_PACKAGE_kmod-usb-serial=y
-CONFIG_PACKAGE_kmod-usb-serial-ch341=y
-CONFIG_PACKAGE_kmod-usb-serial-ch348=y
-CONFIG_PACKAGE_kmod-usb-serial-cp210x=y
-CONFIG_PACKAGE_kmod-usb-serial-ftdi=y
-CONFIG_PACKAGE_kmod-usb-serial-option=y
-CONFIG_PACKAGE_kmod-usb-serial-pl2303=y
-CONFIG_PACKAGE_kmod-usb-serial-qualcomm=y
-CONFIG_PACKAGE_kmod-usb-serial-sierrawireless=y
-CONFIG_PACKAGE_kmod-usb-serial-simple=y
-CONFIG_PACKAGE_kmod-usb-serial-wwan=y
 EOF
 
 # --- USB 其他 ---
@@ -443,14 +367,8 @@ CONFIG_PACKAGE_kmod-usb-printer=y
 CONFIG_PACKAGE_kmod-usb-hid=y
 EOF
 
-# --- 4G/5G 模组 ---
+# --- 网络 / 底层模块 ---
 cat >> .config <<EOF
-CONFIG_PACKAGE_kmod-mhi-bus=y
-CONFIG_PACKAGE_kmod-mhi-net=y
-CONFIG_PACKAGE_kmod-mhi-pci-generic=y
-CONFIG_PACKAGE_kmod-mhi-wwan-ctrl=y
-CONFIG_PACKAGE_kmod-mhi-wwan-mbim=y
-CONFIG_PACKAGE_kmod-mtk-t7xx=y
 CONFIG_PACKAGE_kmod-mii=y
 EOF
 
