@@ -359,13 +359,36 @@ jobs:
           cp -rf openwrt/.config ./artifact/buildinfo/${{matrix.target}}.config || true
           rm -rf $(find openwrt/bin/targets/ -type d -name "packages")
           cp -rf $(find openwrt/bin/packages/ -type f -name "*.ipk") ./artifact/package/ || true
-          cp -rf $(find openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/ || true        
-          # cp -rf $(find openwrt/bin/targets/ -type f -name "*squashfs*efi*img*") ./artifact/firmware/
-          cp -rf $(find openwrt/bin/targets/ -type f \( -name "*squashfs*efi*img*" -o -name "*squashfs*sysupgrade*bin*" -o -name "*squashfs*factory*bin*" -o -name "*squashfs*img*" -o -name "*ext4*img*" -o -name "*sysupgrade*itb*" -o -name "*initramfs*itb*" \) ) ./artifact/firmware/
+          cp -rf $(find openwrt/bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/ || true
+
+          echo "====== 编译产物目录结构 ======"
+          find openwrt/bin/targets/ -type f 2>/dev/null | head -50 || echo "targets 目录为空或不存在"
+          echo "=============================="
+
+          # 收集固件文件（兼容 x86 img / MediaTek bin / itb 等格式）
+          FIRMWARE_FILES=$(find openwrt/bin/targets/ -type f \( \
+            -name "*squashfs*efi*img*" \
+            -o -name "*squashfs*sysupgrade*" \
+            -o -name "*squashfs*factory*" \
+            -o -name "*squashfs*img*" \
+            -o -name "*ext4*img*" \
+            -o -name "*sysupgrade*itb*" \
+            -o -name "*initramfs*itb*" \
+          \) 2>/dev/null)
+
+          if [ -n "$FIRMWARE_FILES" ]; then
+            echo "找到固件文件："
+            echo "$FIRMWARE_FILES"
+            cp -rf $FIRMWARE_FILES ./artifact/firmware/
+          else
+            echo "⚠️ 未找到匹配的固件文件，列出所有 bin/targets 内容："
+            find openwrt/bin/targets/ -type f 2>/dev/null || true
+          fi
+
           cp -rf openwrt/bin/targets/ ./artifact/targets/
-          cp -rf $(find openwrt/bin/targets/ -type f -name "*squashfs*efi*qcow2*") ./artifact/pvekvm/ || true
-          cp -rf $(find openwrt/bin/targets/ -type f -name "*squashfs*efi*vhdx*") ./artifact/hyperv/ || true
-          cp -rf $(find openwrt/bin/targets/ -type f -name "*squashfs*efi*vmdk*") ./artifact/vmware/ || true
+          cp -rf $(find openwrt/bin/targets/ -type f -name "*squashfs*efi*qcow2*") ./artifact/pvekvm/ 2>/dev/null || true
+          cp -rf $(find openwrt/bin/targets/ -type f -name "*squashfs*efi*vhdx*") ./artifact/hyperv/ 2>/dev/null || true
+          cp -rf $(find openwrt/bin/targets/ -type f -name "*squashfs*efi*vmdk*") ./artifact/vmware/ 2>/dev/null || true
           echo "编译完成时间..."
           START_SECONDS=${{ env.START_SECONDS }}
           END_TIME=`date +'%Y-%m-%d %H:%M:%S'`

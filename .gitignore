@@ -1,0 +1,4 @@
+# AI Memory (不提交到 Git，每个开发者有自己的上下文)
+.ai_memory/
+
+# 但如果 1_project_context.md 包含有价值的团队文档，可以手动 git add -f 提交
