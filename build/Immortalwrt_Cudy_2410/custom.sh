@@ -135,18 +135,9 @@ EOF
 # ★ 系统底层与性能增强扩展 ★
 # ============================================================
 cat >> .config <<EOF
-# --- 硬件加解密、多核均衡、BBR 拥塞控制 ---
-CONFIG_PACKAGE_kmod-crypto-hw-safexcel=y
-CONFIG_PACKAGE_kmod-tcp-bbr=y
-CONFIG_PACKAGE_irqbalance=y
-
 # --- ZRAM 内存压缩 (避免 112MB UBI / 内存占用时导致崩盘) ---
 CONFIG_PACKAGE_luci-app-zram=y
 CONFIG_PACKAGE_zram-swap=y
-
-# --- Fullcone NAT (游戏高 NAT 等级穿透优化) ---
-CONFIG_PACKAGE_iptables-mod-fullconenat=y
-CONFIG_PACKAGE_kmod-ipt-fullconenat=y
 
 # --- 网络测速与后台维护诊断工具 ---
 CONFIG_PACKAGE_luci-app-ttyd=y
@@ -172,11 +163,7 @@ CONFIG_PACKAGE_luci-app-openclash=y
 CONFIG_PACKAGE_luci-app-argon-config=y
 CONFIG_PACKAGE_luci-app-filebrowser=y
 CONFIG_PACKAGE_luci-app-diskman=y
-CONFIG_PACKAGE_luci-app-wrtbwmon=y
-CONFIG_PACKAGE_luci-app-turboacc=y
 CONFIG_PACKAGE_luci-app-upnp=y
-CONFIG_PACKAGE_luci-app-diskman=y
-CONFIG_PACKAGE_luci-app-sqm=y
 
 # --- AdGuard Home ---
 CONFIG_PACKAGE_luci-app-adguardhome=y
