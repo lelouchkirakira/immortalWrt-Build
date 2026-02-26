@@ -132,8 +132,28 @@ CONFIG_PACKAGE_kmod-fs-ntfs3=y
 EOF
 
 # ============================================================
-# ★ 以下是你可以自由添加/删除组件的区域 ★
+# ★ 系统底层与性能增强扩展 ★
 # ============================================================
+cat >> .config <<EOF
+# --- 硬件加解密、多核均衡、BBR 拥塞控制 ---
+CONFIG_PACKAGE_kmod-crypto-hw-safexcel=y
+CONFIG_PACKAGE_kmod-tcp-bbr=y
+CONFIG_PACKAGE_irqbalance=y
+
+# --- ZRAM 内存压缩 (避免 112MB UBI / 内存占用时导致崩盘) ---
+CONFIG_PACKAGE_luci-app-zram=y
+CONFIG_PACKAGE_zram-swap=y
+
+# --- Fullcone NAT (游戏高 NAT 等级穿透优化) ---
+CONFIG_PACKAGE_iptables-mod-fullconenat=y
+CONFIG_PACKAGE_kmod-ipt-fullconenat=y
+
+# --- 网络测速与后台维护诊断工具 ---
+CONFIG_PACKAGE_luci-app-ttyd=y
+CONFIG_PACKAGE_iperf3=y
+CONFIG_PACKAGE_htop=y
+CONFIG_PACKAGE_curl=y
+EOF
 
 # ── LuCI 应用插件 ──
 cat >> .config <<EOF
