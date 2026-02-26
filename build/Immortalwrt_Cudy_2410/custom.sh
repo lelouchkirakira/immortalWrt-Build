@@ -196,6 +196,21 @@ CONFIG_PACKAGE_openssh-sftp-server=y
 CONFIG_PACKAGE_kmod-tun=y
 CONFIG_PACKAGE_iptables-mod-extra=y
 CONFIG_PACKAGE_snmpd=y
+
+# --- 补充底层工具与网络诊断 (源于 padavanonly) ---
+CONFIG_PACKAGE_ethtool=y
+CONFIG_PACKAGE_tcpdump=y
+CONFIG_PACKAGE_iw=y
+CONFIG_PACKAGE_iwinfo=y
+CONFIG_PACKAGE_ipset=y
+CONFIG_PACKAGE_blockd=y
+CONFIG_PACKAGE_wireless-regdb=y
+CONFIG_PACKAGE_ca-certificates=y
+
+# --- 补充硬件加解密支持 (OpenSSL与Afalg硬件加速) ---
+CONFIG_PACKAGE_kmod-crypto-hw-safexcel=y
+CONFIG_PACKAGE_libopenssl-afalg_sync=y
+CONFIG_PACKAGE_libopenssl-devcrypto=y
 EOF
 
 # ── kmod 内核模块（完整列表，与旧固件对齐）──
