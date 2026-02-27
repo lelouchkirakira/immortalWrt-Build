@@ -48,19 +48,43 @@ echo ""
 DTS_FILE="target/linux/mediatek/dts/mt7981b-cudy-tr3000-v1-ubootmod.dts"
 
 if [ -f "$DTS_FILE" ]; then
-    echo "🔧 正在确认 DTS UBI 分区大小..."
-    # padavanonly 参考值: reg = <0x5c0000 0x7000000> (起始 0x5c0000, 大小 112MB)
-    # 重要：起始地址必须是 0x5c0000（bdinfo + FIP 之后），不是 0x580000
-    # 只修改 ubi 节点内的 reg，不影响其他分区
-    if grep -q "ubi" "$DTS_FILE"; then
-        # 替换 ubi 节点中的 reg 值为正确的 112MB 布局
-        sed -i '/&ubi/,/};/{s/reg = <0x[0-9a-fA-F]* 0x[0-9a-fA-F]*>/reg = <0x5c0000 0x7000000>/}' "$DTS_FILE"
-        echo "✅ DTS UBI 分区已设置为 112MB (起始 0x5c0000, 大小 0x7000000)"
-    else
-        echo "⚠️  DTS 中未找到 ubi 节点，跳过修改"
-    fi
-    echo "   当前 DTS 分区定义："
-    grep -n "reg = " "$DTS_FILE" | tail -5
+    echo "🔧 正在修改 DTS 为 padavanonly 兼容格式..."
+    # 官方 ImmortalWrt 24.10 的 ubootmod DTS 包含 &chosen{root=/dev/fit0} 和 volumes 块
+    # 这要求使用 FIT 格式根文件系统，但我们编译的是传统 .bin 格式
+    # 必须去掉 &chosen 和 volumes，只保留简洁的 &ubi reg 定义
+    python3 << 'PYEOF'
+with open("target/linux/mediatek/dts/mt7981b-cudy-tr3000-v1-ubootmod.dts", "w") as f:
+    f.write("""// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+
+/dts-v1/;
+#include "mt7981b-cudy-tr3000-v1.dtsi"
+
+/ {
+\tmodel = "Cudy TR3000 v1 ubi 112M";
+\tcompatible = "cudy,tr3000-v1-ubootmod", "mediatek,mt7981";
+};
+
+&spi_nand {
+\tspi-cal-enable;
+\tspi-cal-mode = "read-data";
+\tspi-cal-datalen = <7>;
+\tspi-cal-data = /bits/ 8 <0x53 0x50 0x49 0x4E 0x41 0x4E 0x44>;
+\tspi-cal-addrlen = <5>;
+\tspi-cal-addr = /bits/ 32 <0x0 0x0 0x0 0x0 0x0>;
+
+\tmediatek,nmbm;
+\tmediatek,bmt-max-ratio = <1>;
+\tmediatek,bmt-max-reserved-blocks = <64>;
+};
+
+&ubi {
+\treg = <0x5c0000 0x7000000>;
+};
+""")
+print("✅ DTS 已替换为 padavanonly 兼容格式 (无 &chosen/fit0, 112MB UBI)")
+PYEOF
+    echo "   当前 DTS 内容："
+    cat "$DTS_FILE"
 else
     echo "⚠️  DTS 文件未找到: $DTS_FILE"
     echo "   请在 SSH 中检查实际路径："
