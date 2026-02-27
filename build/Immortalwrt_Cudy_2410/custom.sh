@@ -94,6 +94,43 @@ fi
 echo ""
 
 # ============================================================
+# ★★★ 修复：将 ubootmod 固件格式从 .itb 改回 .bin ★★★
+# ============================================================
+# 官方 ImmortalWrt 24.10 将 cudy_tr3000-v1-ubootmod 定义为 .itb (FIT Image)
+# 但 padavanonly / 老版本 U-Boot 只认 .bin (sysupgrade-tar) 格式
+# 需要把 filogic.mk 中该设备的镜像定义改回传统 .bin 格式
+FILOGIC_MK="target/linux/mediatek/image/filogic.mk"
+if [ -f "$FILOGIC_MK" ]; then
+    echo "🔧 正在将 ubootmod 固件格式从 .itb 改回 .bin..."
+
+    # 定位 cudy_tr3000-v1-ubootmod 设备块，替换关键镜像定义
+    # 1. 将 IMAGES := sysupgrade.itb 改为 sysupgrade.bin
+    sed -i '/define Device\/cudy_tr3000-v1-ubootmod/,/^endef/{
+        s|IMAGES := sysupgrade.itb|IMAGES := sysupgrade.bin|
+        s|KERNEL_INITRAMFS_SUFFIX := -recovery.itb|KERNEL_INITRAMFS_SUFFIX := -recovery.bin|
+        s|KERNEL := kernel-bin | gzip|KERNEL := kernel-bin | lzma | \\\n\tfit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb|
+        s|IMAGE/sysupgrade.itb.*|IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata|
+    }' "$FILOGIC_MK"
+
+    # 2. 删除 UBOOTENV_IN_UBI（padavanonly 的 ubootmod 没有这个）
+    sed -i '/define Device\/cudy_tr3000-v1-ubootmod/,/^endef/{
+        /UBOOTENV_IN_UBI/d
+    }' "$FILOGIC_MK"
+
+    # 3. 添加 IMAGE_SIZE（padavanonly 定义为 114688k = 112MB）
+    sed -i '/define Device\/cudy_tr3000-v1-ubootmod/,/^endef/{
+        /KERNEL_IN_UBI/a\  IMAGE_SIZE := 114688k
+    }' "$FILOGIC_MK"
+
+    echo "✅ filogic.mk 固件格式已修正为 .bin (sysupgrade-tar)"
+    echo "   验证修改结果："
+    sed -n '/define Device\/cudy_tr3000-v1-ubootmod/,/^endef/p' "$FILOGIC_MK"
+else
+    echo "⚠️  filogic.mk 未找到: $FILOGIC_MK"
+fi
+echo ""
+
+# ============================================================
 # 创建 .config 编译配置文件
 # ============================================================
 cd $WORKPATH
