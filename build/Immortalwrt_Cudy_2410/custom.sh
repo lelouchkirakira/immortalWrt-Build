@@ -97,32 +97,47 @@ echo ""
 # ★★★ 修复：将 ubootmod 固件格式从 .itb 改回 .bin ★★★
 # ============================================================
 # 官方 ImmortalWrt 24.10 将 cudy_tr3000-v1-ubootmod 定义为 .itb (FIT Image)
-# 但 padavanonly / 老版本 U-Boot 只认 .bin (sysupgrade-tar) 格式
-# 需要把 filogic.mk 中该设备的镜像定义改回传统 .bin 格式
+# 但用户的 U-Boot 只认 .bin (sysupgrade-tar) 格式
+# 用 Python 脚本精确替换整个设备定义块，避免 sed 多行替换出错
 FILOGIC_MK="target/linux/mediatek/image/filogic.mk"
 if [ -f "$FILOGIC_MK" ]; then
     echo "🔧 正在将 ubootmod 固件格式从 .itb 改回 .bin..."
 
-    # 定位 cudy_tr3000-v1-ubootmod 设备块，替换关键镜像定义
-    # 1. 将 IMAGES := sysupgrade.itb 改为 sysupgrade.bin
-    sed -i '/define Device\/cudy_tr3000-v1-ubootmod/,/^endef/{
-        s|IMAGES := sysupgrade.itb|IMAGES := sysupgrade.bin|
-        s|KERNEL_INITRAMFS_SUFFIX := -recovery.itb|KERNEL_INITRAMFS_SUFFIX := -recovery.bin|
-        s|KERNEL := kernel-bin | gzip|KERNEL := kernel-bin | lzma | \\\n\tfit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb|
-        s|IMAGE/sysupgrade.itb.*|IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata|
-    }' "$FILOGIC_MK"
+    python3 << 'PYEOF'
+import re
 
-    # 2. 删除 UBOOTENV_IN_UBI（padavanonly 的 ubootmod 没有这个）
-    sed -i '/define Device\/cudy_tr3000-v1-ubootmod/,/^endef/{
-        /UBOOTENV_IN_UBI/d
-    }' "$FILOGIC_MK"
+with open("target/linux/mediatek/image/filogic.mk", "r") as f:
+    content = f.read()
 
-    # 3. 添加 IMAGE_SIZE（padavanonly 定义为 114688k = 112MB）
-    sed -i '/define Device\/cudy_tr3000-v1-ubootmod/,/^endef/{
-        /KERNEL_IN_UBI/a\  IMAGE_SIZE := 114688k
-    }' "$FILOGIC_MK"
+# 精确匹配整个 cudy_tr3000-v1-ubootmod 设备定义块
+pattern = r'define Device/cudy_tr3000-v1-ubootmod\n.*?\nendef'
+match = re.search(pattern, content, re.DOTALL)
 
-    echo "✅ filogic.mk 固件格式已修正为 .bin (sysupgrade-tar)"
+if match:
+    # 用与 padavanonly 完全一致的定义替换
+    new_block = """define Device/cudy_tr3000-v1-ubootmod
+  DEVICE_VENDOR := Cudy
+  DEVICE_MODEL := TR3000
+  DEVICE_VARIANT := v1 (OpenWrt U-Boot layout)
+  DEVICE_DTS := mt7981b-cudy-tr3000-v1-ubootmod
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-usb3 kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware automount
+  UBINIZE_OPTS := -E 5
+  BLOCKSIZE := 128k
+  PAGESIZE := 2048
+  KERNEL_IN_UBI := 1
+  IMAGE_SIZE := 114688k
+  IMAGE/sysupgrade.bin := sysupgrade-tar | append-metadata
+endef"""
+    content = content[:match.start()] + new_block + content[match.end():]
+
+    with open("target/linux/mediatek/image/filogic.mk", "w") as f:
+        f.write(content)
+    print("✅ filogic.mk 设备定义已完整替换为 .bin 格式 (对齐 padavanonly)")
+else:
+    print("⚠️  未找到 cudy_tr3000-v1-ubootmod 设备定义块")
+PYEOF
+
     echo "   验证修改结果："
     sed -n '/define Device\/cudy_tr3000-v1-ubootmod/,/^endef/p' "$FILOGIC_MK"
 else
