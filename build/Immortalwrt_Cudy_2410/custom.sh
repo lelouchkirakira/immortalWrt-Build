@@ -31,6 +31,22 @@ rm -rf package/feeds/luci/luci-app-openclash 2>/dev/null
 echo "✅ 默认包删除完成"
 echo ""
 
+# ── 修复 Rust 编译时无法下载 CI LLVM 的核心报错 (404 错误) ──
+# 原因: v24.10.0 冻结的 Rust 1.84 的 LLVM CI 制品已被官方服务器删除
+# 修复: 将 Makefile 里的 --set=llvm.download-ci-llvm=true 改为 false
+# 注意: 此修复必须在 feeds install 之后、cd $WORKPATH 之前执行 (此时 cwd 仍为 openwrt 根目录)
+echo "🔧 正在应用 Rust host 编译修复补丁..."
+RUST_MK="feeds/packages/lang/rust/Makefile"
+if [ -f "$RUST_MK" ]; then
+    sed -i 's/--set=llvm.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/g' "$RUST_MK"
+    echo "✅ Rust Makefile 修复完毕 (禁止下载已失效的 CI-LLVM, 改为本地编译)"
+    echo "   修复后的内容验证:"
+    grep "download-ci-llvm" "$RUST_MK" || echo "   (未找到关键字，可能已被移除)"
+else
+    echo "⚠️  未找到 Rust Makefile: $RUST_MK (pwd=$(pwd))"
+fi
+echo ""
+
 # ============================================================
 # ★★★ 核心：修改 DTS 实现 112MB 大分区 ★★★
 # ============================================================
@@ -236,20 +252,7 @@ EOF
 # ★ 系统底层与性能增强扩展 ★
 # ============================================================
 
-# ── 修复 Rust 编译时无法下载 CI LLVM 的核心报错 (404 错误) ──
-# 原因: v24.10.0 冻结的 Rust 1.84 的 LLVM CI 制品已被官方服务器删除
-# 修复: 将 Makefile 里的 --set=llvm.download-ci-llvm=true 改为 false
-echo "🔧 正在应用 Rust host 编译修复补丁..."
-RUST_MK="feeds/packages/lang/rust/Makefile"
-if [ -f "$RUST_MK" ]; then
-    sed -i 's/--set=llvm.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/g' "$RUST_MK"
-    echo "✅ Rust Makefile 修复完毕 (禁止下载已失效的 CI-LLVM, 改为本地编译)"
-    echo "   修复后的内容验证:"
-    grep "download-ci-llvm" "$RUST_MK" || echo "   (未找到关键字，可能已被移除)"
-else
-    echo "⚠️  未找到 Rust Makefile，如果不包含则跳过此步"
-fi
-echo ""
+# (Rust 修复已移至 feeds install 之后、cd $WORKPATH 之前的正确位置)
 
 cat >> .config <<EOF
 # --- ZRAM 内存压缩 (避免 112MB UBI / 内存占用时导致崩盘) ---
