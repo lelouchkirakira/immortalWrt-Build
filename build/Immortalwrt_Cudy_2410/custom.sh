@@ -325,10 +325,18 @@ CONFIG_KERNEL_DEBUG_KERNEL=n
 CONFIG_KERNEL_DEBUG_INFO=n
 CONFIG_DEBUG=n
 
-# 强制最大化 SquashFS 原本的压缩块大小 (从默认最高提至1024KB/2048KB等级)
-CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=1024
+# 强制 1024KB 极限 SquashFS 压缩区块 (修正语法)
+CONFIG_TARGET_SQUASHFS_BLOCK_SIZE_1024K=y
+# CONFIG_TARGET_SQUASHFS_BLOCK_SIZE_256K is not set
+
+# UBIFS/Overlay 数据层使用 ZSTD 字典压缩减小空间占用
 CONFIG_TARGET_UBIFS_COMPRESSION_ZSTD=y
 CONFIG_TARGET_UBIFS_COMPRESSION_NONE=n
+
+# AdguardHome 开启 UPX 压缩 (显著减小大体积Go程序的物理大小)
+CONFIG_PACKAGE_upx=y
+CONFIG_PACKAGE_adguardhome_compress_upx=y
+CONFIG_PACKAGE_tailscale_compress_upx=y
 
 # --- 斩草除根：多国语言包与无界面语言包强行清理（节省成百上千个微小文件） ---
 # 仅保留简体中文，强删繁体及外国语系
