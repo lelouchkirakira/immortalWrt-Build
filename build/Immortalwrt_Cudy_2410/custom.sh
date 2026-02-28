@@ -28,8 +28,6 @@ echo ""
 echo "🧹 删除部分默认包..."
 rm -rf feeds/luci/applications/luci-app-openclash 2>/dev/null
 rm -rf package/feeds/luci/luci-app-openclash 2>/dev/null
-rm -rf feeds/luci/themes/luci-theme-argon 2>/dev/null
-rm -rf package/feeds/luci/luci-theme-argon 2>/dev/null
 echo "✅ 默认包删除完成"
 echo ""
 
@@ -62,6 +60,11 @@ with open("target/linux/mediatek/dts/mt7981b-cudy-tr3000-v1-ubootmod.dts", "w") 
 / {
 \tmodel = "Cudy TR3000 v1 ubi 112M";
 \tcompatible = "cudy,tr3000-v1-ubootmod", "mediatek,mt7981";
+
+\taliases {
+\t\tethernet0 = &gmac0;
+\t\tethernet1 = &gmac1;
+\t};
 };
 
 &spi_nand {
@@ -172,14 +175,19 @@ echo ""
 # ============================================================
 # ★★★ 定制：修改默认网关 IP 地址为 192.168.2.1 ★★★
 # ============================================================
-echo "🔧 正在将默认 LAN IP 修改为 192.168.2.1..."
+echo "🔧 正在将默认 LAN IP 修改为 192.168.2.1 (使用 uci-defaults 强覆盖)..."
+mkdir -p package/base-files/files/etc/uci-defaults
+cat << 'UBIEOF' > package/base-files/files/etc/uci-defaults/99-custom-ip
+uci set network.lan.ipaddr='192.168.2.1'
+uci commit network
+exit 0
+UBIEOF
+
 CONFIG_GEN="package/base-files/files/bin/config_generate"
 if [ -f "$CONFIG_GEN" ]; then
     sed -i "s/192.168.1.1/192.168.2.1/g" "$CONFIG_GEN"
-    echo "✅ 默认 IP 修改成功 (192.168.2.1)"
-else
-    echo "⚠️  未找到配置文件: $CONFIG_GEN"
 fi
+echo "✅ 默认 IP 修改自启脚本已部署完成 (192.168.2.1)"
 echo ""
 
 # ============================================================
@@ -211,13 +219,17 @@ CONFIG_PACKAGE_odhcp6c=y
 CONFIG_PACKAGE_odhcpd-ipv6only=y
 EOF
 
-# ── USB 支持 ──
+# ── USB 与 4G/5G 驱动 (精简精准对齐) ──
 cat >> .config <<EOF
 CONFIG_PACKAGE_kmod-usb3=y
 CONFIG_PACKAGE_kmod-usb-storage=y
 CONFIG_PACKAGE_kmod-fs-ext4=y
 CONFIG_PACKAGE_kmod-fs-vfat=y
 CONFIG_PACKAGE_kmod-fs-ntfs3=y
+CONFIG_PACKAGE_kmod-usb-net-rndis=y
+CONFIG_PACKAGE_kmod-usb-net-ipheth=y
+CONFIG_PACKAGE_kmod-usb-net-cdc-ncm=y
+CONFIG_PACKAGE_kmod-usb-net-qmi-wwan=y
 EOF
 
 # ============================================================
@@ -237,36 +249,81 @@ EOF
 
 # ── LuCI 应用插件 ──
 cat >> .config <<EOF
-# --- 你想要安装的插件，设置为 =y ---
+# --- 你想安装的插件（精简对齐版） ---
 CONFIG_PACKAGE_luci=y
 CONFIG_PACKAGE_luci-compat=y
 CONFIG_PACKAGE_luci-lib-ipkg=y
 CONFIG_PACKAGE_luci-app-firewall=y
-CONFIG_PACKAGE_luci-app-opkg=y
+CONFIG_PACKAGE_luci-app-package-manager=y
 CONFIG_PACKAGE_luci-app-ttyd=y
-CONFIG_PACKAGE_luci-app-ddns=y
-CONFIG_PACKAGE_luci-app-uhttpd=y
-CONFIG_PACKAGE_luci-app-wireguard=y
-CONFIG_PACKAGE_luci-proto-wireguard=y
 CONFIG_PACKAGE_luci-app-openclash=y
-CONFIG_PACKAGE_luci-app-argon-config=y
-CONFIG_PACKAGE_luci-app-filebrowser=y
-CONFIG_PACKAGE_luci-app-diskman=y
 CONFIG_PACKAGE_luci-app-upnp=y
 CONFIG_PACKAGE_luci-app-turboacc=y
-CONFIG_PACKAGE_luci-app-sqm=y
 CONFIG_PACKAGE_luci-app-wrtbwmon=y
+CONFIG_PACKAGE_wrtbwmon=y
 
 # --- AdGuard Home ---
 CONFIG_PACKAGE_luci-app-adguardhome=y
 CONFIG_PACKAGE_adguardhome=y
 
-# --- 不需要的插件设置为 =n ---
+# --- 还原备份中的专属轻量级应用 ---
+CONFIG_PACKAGE_luci-app-autoreboot=y
+CONFIG_PACKAGE_luci-app-usb-printer=y
+CONFIG_PACKAGE_luci-app-samba4=y
+CONFIG_PACKAGE_luci-app-store=y
+CONFIG_PACKAGE_luci-app-arpbind=y
+CONFIG_PACKAGE_luci-app-usb3disable=y
+CONFIG_PACKAGE_luci-app-3ginfo-lite=y
+CONFIG_PACKAGE_luci-app-modemband=y
+
+# --- 保留的功能: 你的 SQM 及无 UI版精简 WireGuard ---
+CONFIG_PACKAGE_luci-app-sqm=y
+CONFIG_PACKAGE_sqm-scripts=y
+CONFIG_PACKAGE_wireguard-tools=y
+CONFIG_PACKAGE_kmod-wireguard=y
+
+# --- 删除我自行添加的臃肿版差分插件 ---
+CONFIG_PACKAGE_luci-app-wireguard=n
+CONFIG_PACKAGE_luci-proto-wireguard=n
+CONFIG_PACKAGE_luci-app-ddns=n
+CONFIG_PACKAGE_luci-app-filebrowser=n
+CONFIG_PACKAGE_luci-app-diskman=n
 CONFIG_PACKAGE_luci-app-passwall=n
 CONFIG_PACKAGE_luci-app-passwall2=n
 CONFIG_PACKAGE_luci-app-ssr-plus=n
 CONFIG_PACKAGE_luci-app-v2ray-server=n
-CONFIG_PACKAGE_luci-app-samba4=n
+EOF
+
+# ── 突破压缩极限：在不减少插件情况下的核心优化（可省 5MB-10MB） ──
+cat >> .config <<EOF
+# 关闭不必要的核心调试和崩溃日志
+CONFIG_KERNEL_CRASHLOG=n
+CONFIG_KERNEL_KALLSYMS=n
+CONFIG_KERNEL_DEBUG_KERNEL=n
+CONFIG_KERNEL_DEBUG_INFO=n
+CONFIG_DEBUG=n
+
+# 强制最大化 SquashFS 原本的压缩块大小 (从默认最高提至1024KB/2048KB等级)
+CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=1024
+CONFIG_TARGET_UBIFS_COMPRESSION_ZSTD=y
+CONFIG_TARGET_UBIFS_COMPRESSION_NONE=n
+
+# --- 斩草除根：多国语言包与无界面语言包强行清理（节省成百上千个微小文件） ---
+# 仅保留简体中文，强删繁体及外国语系
+CONFIG_LUCI_LANG_zh_Hant=n
+CONFIG_LUCI_LANG_zh_TW=n
+CONFIG_LUCI_LANG_zh_HK=n
+CONFIG_LUCI_LANG_en=y
+CONFIG_LUCI_LANG_ru=n
+CONFIG_LUCI_LANG_ja=n
+CONFIG_LUCI_LANG_ko=n
+CONFIG_LUCI_LANG_fr=n
+CONFIG_LUCI_LANG_de=n
+CONFIG_LUCI_LANG_es=n
+CONFIG_LUCI_LANG_pt_BR=n
+
+# 强行下架无界面的语言包 (例如 ttyd 这类纯技术终端没必要翻译)
+CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn=n
 EOF
 
 # ── LuCI 主题 ──
