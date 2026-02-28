@@ -294,7 +294,9 @@ CONFIG_PACKAGE_luci-app-arpbind=y
 CONFIG_PACKAGE_luci-app-usb3disable=y
 CONFIG_PACKAGE_luci-app-3ginfo-lite=y
 CONFIG_PACKAGE_luci-app-modemband=y
-CONFIG_PACKAGE_luci-app-tailscale=y
+
+# --- 保留无界面的后台核心组件 ---
+CONFIG_PACKAGE_tailscale=y
 
 # --- 保留的功能: 你的 SQM 及无 UI版精简 WireGuard ---
 CONFIG_PACKAGE_luci-app-sqm=y
