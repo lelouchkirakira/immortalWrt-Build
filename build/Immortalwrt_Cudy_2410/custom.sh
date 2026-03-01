@@ -28,6 +28,14 @@ echo "📥 安装所有 feeds..."
 echo "✅ feeds 更新与安装完成"
 echo ""
 
+# ── 拔除系统级对原版 Argon 主题的祖传依赖，将默认强制换为 ArmyGreen ──
+echo "🎨 正在强行剥除默认 Argon 主题并替换为 ArmyGreen..."
+sed -i 's/luci-theme-argon/luci-theme-argon_armygreen/g' feeds/luci/collections/luci/Makefile 2>/dev/null
+sed -i 's/luci-theme-argon/luci-theme-argon_armygreen/g' feeds/luci/collections/luci-light/Makefile 2>/dev/null
+sed -i 's/luci-theme-argon/luci-theme-argon_armygreen/g' feeds/luci/collections/luci-nginx/Makefile 2>/dev/null
+sed -i 's/argon/argon_armygreen/g' feeds/luci/modules/luci-base/root/etc/config/luci 2>/dev/null
+echo ""
+
 # ── 删除冲突的默认包（按需调整）──
 echo "🧹 删除部分默认包..."
 rm -rf feeds/luci/applications/luci-app-openclash 2>/dev/null
