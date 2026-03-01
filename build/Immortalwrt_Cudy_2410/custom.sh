@@ -27,16 +27,6 @@ echo "📥 安装所有 feeds..."
 echo "✅ feeds 更新与安装完成"
 echo ""
 
-# ── 偷梁换柱：将官方 Argon 主题的视觉文件硬替换为 ArmyGreen，完美兼容 24.10 ──
-echo "🎨 正在注入 Argon_ArmyGreen 视觉包到官方主题中..."
-git clone --depth 1 -b main https://github.com/xxkdb/luci-theme-argon_armygreen /tmp/armygreen_theme > /dev/null 2>&1
-if [ -d "/tmp/armygreen_theme" ] && [ -d "feeds/luci/themes/luci-theme-argon" ]; then
-    cp -rf /tmp/armygreen_theme/htdocs/luci-static/argon_armygreen/* feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/
-    rm -rf /tmp/armygreen_theme
-    echo "✅ 军绿主题视觉包注入成功！"
-fi
-echo ""
-
 # ── 删除冲突的默认包（按需调整）──
 echo "🧹 删除部分默认包..."
 rm -rf feeds/luci/applications/luci-app-openclash 2>/dev/null
