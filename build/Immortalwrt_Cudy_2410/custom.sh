@@ -7,8 +7,22 @@
 echo "📦 正在克隆第三方软件包..."
 git clone https://github.com/xcz-ns/OpenWrt-Packages package/OpenWrt-Packages > /dev/null 2>&1
 git clone --depth 1 https://github.com/morytyann/OpenWrt-nikki package/nikki > /dev/null 2>&1
-git clone --depth 1 -b master https://github.com/xxkdb/luci-theme-argon_armygreen package/luci-theme-argon_armygreen > /dev/null 2>&1
+git clone --depth 1 -b main https://github.com/xxkdb/luci-theme-argon_armygreen package/luci-theme-argon_armygreen > /dev/null 2>&1
 echo "✅ 第三方软件包克隆完成"
+echo ""
+
+# ── 极限压缩军绿主题的背景库（删掉几 MB 的大图，替换为 1 像素透明图） ──
+echo "🖼️ 正在极限压缩 Argon ArmyGreen 主题体积..."
+if [ -d "package/luci-theme-argon_armygreen" ]; then
+    rm -rf package/luci-theme-argon_armygreen/jpg 2>/dev/null
+    IMG_DIR="package/luci-theme-argon_armygreen/htdocs/luci-static/argon_armygreen/img"
+    if [ -d "$IMG_DIR" ]; then
+        for i in 1 2 3; do
+            echo "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" | base64 -d > "$IMG_DIR/bg${i}.jpg"
+        done
+        echo "✅ 背景图片体积压缩归零 (保留框架避免404)"
+    fi
+fi
 echo ""
 
 # ── feeds 更新 ──
