@@ -37,9 +37,7 @@ wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/background/
 # 2. 下载替换登录页面头像 logo 和浏览器小图标 favicon
 wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/logo.png https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/logo.png
 wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/favicon.ico https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/favicon.ico
-# 3. 仿照 MI-R4A 更改颜色的思路，利用 sed 强行修改 argon_config 设定的默认主色调为军绿色
-sed -i 's/option primary .*/option primary '"'"'#4b5320'"'"'/g' feeds/luci/applications/luci-app-argon-config/root/etc/config/argon 2>/dev/null
-echo "✅ ArmyGreen 强行覆写与颜色设定全部完成"
+echo "✅ ArmyGreen 图像强行覆写完成（保持官方原生高透蓝核心色）"
 echo ""
 
 # ── 删除冲突的默认包（按需调整）──
