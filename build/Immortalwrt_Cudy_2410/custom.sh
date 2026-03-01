@@ -279,11 +279,9 @@ CONFIG_PACKAGE_luci-app-mihomo=y
 CONFIG_PACKAGE_mihomo=y
 CONFIG_PACKAGE_luci-app-upnp=y
 CONFIG_PACKAGE_luci-app-turboacc=y
-CONFIG_PACKAGE_luci-app-wrtbwmon=y
-CONFIG_PACKAGE_wrtbwmon=y
+CONFIG_PACKAGE_luci-app-nlbwmon=y
 
 # --- AdGuard Home ---
-CONFIG_PACKAGE_luci-app-adguardhome=y
 CONFIG_PACKAGE_adguardhome=y
 
 # --- 还原备份中的专属轻量级应用 ---
