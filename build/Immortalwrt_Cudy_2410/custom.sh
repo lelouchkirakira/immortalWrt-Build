@@ -278,7 +278,6 @@ CONFIG_PACKAGE_luci-app-ttyd=y
 CONFIG_PACKAGE_luci-app-mihomo=y
 CONFIG_PACKAGE_mihomo=y
 CONFIG_PACKAGE_luci-app-upnp=y
-CONFIG_PACKAGE_luci-app-turboacc=y
 CONFIG_PACKAGE_luci-app-nlbwmon=y
 
 # --- AdGuard Home ---
