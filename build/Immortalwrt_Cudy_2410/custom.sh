@@ -368,9 +368,9 @@ CONFIG_LUCI_LANG_pt_BR=n
 CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn=n
 EOF
 
-# ── LuCI 主题 ──
+# ── 配置 LuCI 主题 ──
 cat >> .config <<EOF
-CONFIG_PACKAGE_luci-theme-argon=y
+CONFIG_PACKAGE_luci-theme-argon_armygreen=y
 EOF
 
 # ── 常用软件包 ──
