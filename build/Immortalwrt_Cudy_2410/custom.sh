@@ -276,7 +276,7 @@ CONFIG_PACKAGE_luci-app-firewall=y
 CONFIG_PACKAGE_luci-app-package-manager=y
 CONFIG_PACKAGE_luci-app-ttyd=y
 CONFIG_PACKAGE_luci-app-homeproxy=y
-CONFIG_PACKAGE_sing-box=y
+CONFIG_PACKAGE_homeproxy=y
 CONFIG_PACKAGE_luci-app-upnp=y
 CONFIG_PACKAGE_luci-app-nlbwmon=y
 
@@ -327,11 +327,10 @@ CONFIG_DEBUG=n
 # 强制 1024KB 极限 SquashFS 压缩区块 
 CONFIG_TARGET_SQUASHFS_BLOCK_SIZE=1024
 
-# AdguardHome/Tailscale/Mihomo 开启 UPX 压缩 (显著减小大体积Go程序的物理大小)
+# AdguardHome/Tailscale/Homeproxy 开启 UPX 压缩
 CONFIG_PACKAGE_upx=y
 CONFIG_PACKAGE_adguardhome_compress_upx=y
 CONFIG_PACKAGE_tailscale_compress_upx=y
-CONFIG_PACKAGE_sing-box_compress_upx=y
 EOF
 
 # --- 斩草除根：多国语言包与无界面语言包强行清理（节省成百上千个微小文件） ---
