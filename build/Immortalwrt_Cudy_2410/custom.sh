@@ -7,6 +7,7 @@
 echo "📦 正在克隆第三方软件包..."
 git clone https://github.com/xcz-ns/OpenWrt-Packages package/OpenWrt-Packages > /dev/null 2>&1
 git clone --depth 1 https://github.com/morytyann/OpenWrt-nikki package/nikki > /dev/null 2>&1
+git clone --depth 1 -b master https://github.com/xxkdb/luci-theme-argon_armygreen package/luci-theme-argon_armygreen > /dev/null 2>&1
 echo "✅ 第三方软件包克隆完成"
 echo ""
 
@@ -287,7 +288,10 @@ CONFIG_PACKAGE_adguardhome=y
 # --- 还原备份中的专属轻量级应用 ---
 CONFIG_PACKAGE_luci-app-autoreboot=y
 CONFIG_PACKAGE_luci-app-usb-printer=y
-CONFIG_PACKAGE_luci-app-samba4=y
+CONFIG_PACKAGE_luci-app-ksmbd=y
+CONFIG_PACKAGE_ksmbd-server=y
+CONFIG_PACKAGE_luci-app-samba4=n
+CONFIG_PACKAGE_samba4-server=n
 CONFIG_PACKAGE_luci-app-store=y
 CONFIG_PACKAGE_luci-app-arpbind=y
 CONFIG_PACKAGE_luci-app-usb3disable=y
@@ -313,6 +317,8 @@ CONFIG_PACKAGE_luci-app-passwall=n
 CONFIG_PACKAGE_luci-app-passwall2=n
 CONFIG_PACKAGE_luci-app-ssr-plus=n
 CONFIG_PACKAGE_luci-app-v2ray-server=n
+CONFIG_PACKAGE_luci-theme-argon_armygreen=y
+CONFIG_PACKAGE_luci-theme-argon=n
 EOF
 
 
