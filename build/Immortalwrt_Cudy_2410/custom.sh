@@ -6,6 +6,7 @@
 
 echo "📦 正在克隆第三方软件包..."
 git clone https://github.com/xcz-ns/OpenWrt-Packages package/OpenWrt-Packages > /dev/null 2>&1
+git clone --depth 1 https://github.com/morytyann/OpenWrt-nikki package/nikki > /dev/null 2>&1
 echo "✅ 第三方软件包克隆完成"
 echo ""
 
@@ -275,8 +276,8 @@ CONFIG_PACKAGE_luci-lib-ipkg=y
 CONFIG_PACKAGE_luci-app-firewall=y
 CONFIG_PACKAGE_luci-app-package-manager=y
 CONFIG_PACKAGE_luci-app-ttyd=y
-CONFIG_PACKAGE_luci-app-homeproxy=y
-CONFIG_PACKAGE_homeproxy=y
+CONFIG_PACKAGE_luci-app-nikki=y
+CONFIG_PACKAGE_nikki=y
 CONFIG_PACKAGE_luci-app-upnp=y
 CONFIG_PACKAGE_luci-app-nlbwmon=y
 
