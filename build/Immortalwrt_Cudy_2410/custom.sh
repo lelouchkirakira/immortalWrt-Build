@@ -29,10 +29,11 @@ echo ""
 
 # ── 根据 MI-R4A 示例，暴力覆盖 Argon 官方主题资产以完美实现 ArmyGreen 视觉 ──
 echo "🎨 正在通过源码替换机制渲染 ArmyGreen 视觉包..."
-# 1. 下载 ArmyGreen 源码中的背景图片并覆盖官方图库
+# 1. 下载 ArmyGreen 源码中的背景图片并放入官方背景轮播图册与初始库中
 wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/img/bg1.jpg https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/img/bg1.jpg
-wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/img/bg2.jpg https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/img/bg2.jpg
-wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/img/bg3.jpg https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/img/bg3.jpg
+wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/background/bg1.jpg https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/img/bg1.jpg
+wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/background/bg2.jpg https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/img/bg2.jpg
+wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/background/bg3.jpg https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/img/bg3.jpg
 # 2. 下载替换登录页面头像 logo 和浏览器小图标 favicon
 wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/logo.png https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/logo.png
 wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/favicon.ico https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/favicon.ico
@@ -355,6 +356,7 @@ CONFIG_PACKAGE_tailscale_compress_upx=y
 EOF
 
 # --- 斩草除根：多国语言包与无界面语言包强行清理（节省成百上千个微小文件） ---
+cat >> .config <<EOF
 # 仅保留简体中文，强删繁体及外国语系
 CONFIG_LUCI_LANG_zh_Hant=n
 CONFIG_LUCI_LANG_zh_TW=n
@@ -544,8 +546,6 @@ cat >> .config <<EOF
 CONFIG_PACKAGE_kmod-usb-storage=y
 CONFIG_PACKAGE_kmod-usb-storage-extras=y
 CONFIG_PACKAGE_kmod-usb-storage-uas=y
-EOF
-
 EOF
 
 # --- USB 串口核心 ---
