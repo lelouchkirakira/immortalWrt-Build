@@ -7,7 +7,6 @@
 echo "📦 正在克隆第三方软件包..."
 git clone https://github.com/xcz-ns/OpenWrt-Packages package/OpenWrt-Packages > /dev/null 2>&1
 git clone --depth 1 https://github.com/morytyann/OpenWrt-nikki package/nikki > /dev/null 2>&1
-git clone --depth 1 -b main https://github.com/xxkdb/luci-theme-argon_armygreen package/luci-theme-argon_armygreen > /dev/null 2>&1
 echo "✅ 第三方软件包克隆完成"
 echo ""
 
@@ -28,12 +27,14 @@ echo "📥 安装所有 feeds..."
 echo "✅ feeds 更新与安装完成"
 echo ""
 
-# ── 拔除系统级对原版 Argon 主题的祖传依赖，将默认强制换为 ArmyGreen ──
-echo "🎨 正在强行剥除默认 Argon 主题并替换为 ArmyGreen..."
-sed -i 's/luci-theme-argon/luci-theme-argon_armygreen/g' feeds/luci/collections/luci/Makefile 2>/dev/null
-sed -i 's/luci-theme-argon/luci-theme-argon_armygreen/g' feeds/luci/collections/luci-light/Makefile 2>/dev/null
-sed -i 's/luci-theme-argon/luci-theme-argon_armygreen/g' feeds/luci/collections/luci-nginx/Makefile 2>/dev/null
-sed -i 's/argon/argon_armygreen/g' feeds/luci/modules/luci-base/root/etc/config/luci 2>/dev/null
+# ── 偷梁换柱：将官方 Argon 主题的视觉文件硬替换为 ArmyGreen，完美兼容 24.10 ──
+echo "🎨 正在注入 Argon_ArmyGreen 视觉包到官方主题中..."
+git clone --depth 1 -b main https://github.com/xxkdb/luci-theme-argon_armygreen /tmp/armygreen_theme > /dev/null 2>&1
+if [ -d "/tmp/armygreen_theme" ] && [ -d "feeds/luci/themes/luci-theme-argon" ]; then
+    cp -rf /tmp/armygreen_theme/htdocs/luci-static/argon_armygreen/* feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/
+    rm -rf /tmp/armygreen_theme
+    echo "✅ 军绿主题视觉包注入成功！"
+fi
 echo ""
 
 # ── 删除冲突的默认包（按需调整）──
@@ -327,8 +328,7 @@ CONFIG_PACKAGE_luci-app-passwall=n
 CONFIG_PACKAGE_luci-app-passwall2=n
 CONFIG_PACKAGE_luci-app-ssr-plus=n
 CONFIG_PACKAGE_luci-app-v2ray-server=n
-CONFIG_PACKAGE_luci-theme-argon_armygreen=y
-CONFIG_PACKAGE_luci-theme-argon=n
+CONFIG_PACKAGE_luci-theme-argon=y
 EOF
 
 
@@ -370,7 +370,7 @@ EOF
 
 # ── 配置 LuCI 主题 ──
 cat >> .config <<EOF
-CONFIG_PACKAGE_luci-theme-argon_armygreen=y
+CONFIG_PACKAGE_luci-theme-argon=y
 EOF
 
 # ── 常用软件包 ──
