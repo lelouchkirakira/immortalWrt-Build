@@ -623,7 +623,6 @@ cat >> .config <<EOF
 CONFIG_PACKAGE_luci-i18n-base-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-firewall-zh-cn=y
 CONFIG_PACKAGE_luci-i18n-opkg-zh-cn=y
-CONFIG_PACKAGE_luci-i18n-ttyd-zh-cn=y
 EOF
 
 # 去除前导空格
