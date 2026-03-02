@@ -377,6 +377,7 @@ EOF
 # ── 配置 LuCI 主题 ──
 cat >> .config <<EOF
 CONFIG_PACKAGE_luci-theme-argon=y
+CONFIG_PACKAGE_luci-app-argon-config=y
 CONFIG_PACKAGE_luci-theme-bootstrap=n
 EOF
 
