@@ -37,7 +37,9 @@ wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/background/
 # 2. 下载替换登录页面头像 logo 和浏览器小图标 favicon
 wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/logo.png https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/logo.png
 wget -qO feeds/luci/themes/luci-theme-argon/htdocs/luci-static/argon/favicon.ico https://raw.githubusercontent.com/XXKDB/luci-theme-argon_armygreen/main/htdocs/luci-static/argon_armygreen/favicon.ico
-echo "✅ ArmyGreen 图像强行覆写完成（保持官方原生高透蓝核心色）"
+# 3. 强制锁定浅色模式（Light），防止因系统深色模式强制跟随导致变黑
+sed -i 's/option mode .*/option mode '"'"'light'"'"'/g' feeds/luci/applications/luci-app-argon-config/root/etc/config/argon 2>/dev/null
+echo "✅ ArmyGreen 图像强行覆写完成（已强制锁定浅色清爽蓝模式）"
 echo ""
 
 # ── 删除冲突的默认包（按需调整）──
