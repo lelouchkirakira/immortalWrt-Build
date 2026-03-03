@@ -1,4 +1,35 @@
-# AI Memory (不提交到 Git，每个开发者有自己的上下文)
+# ===== AI / IDE 工具 =====
 .ai_memory/
+.gemini/
+.codex/
+.claude/
+.vscode/
 
-# 但如果 1_project_context.md 包含有价值的团队文档，可以手动 git add -f 提交
+# ===== 本地脚本（含 SSH 密码等敏感信息）=====
+*.py
+
+# ===== 敏感系统配置 =====
+# 密码、密钥、凭据
+**/etc/shadow
+**/etc/passwd
+**/etc/dropbear/
+**/authorized_keys
+
+# WiFi 密码、网络凭据
+**/etc/config/wireless
+**/etc/config/network
+
+# 代理/VPN 配置（含服务器地址、密码、token）
+**/ssandfrpc/
+**/frpc*.toml
+**/ssserver.json
+
+# 防火墙规则（可能暴露端口策略）
+**/etc/config/firewall
+
+# ===== 二进制文件 =====
+*.db
+**/openclash/core/
+
+# ===== 临时文件 =====
+paths-to-remove.txt
