@@ -20,9 +20,8 @@
 **/etc/config/network
 
 # 代理/VPN 配置（含服务器地址、密码、token）
-**/ssandfrpc/
-**/frpc*.toml
-**/ssserver.json
+**/ssandfrpc/*.toml
+**/ssandfrpc/*.json
 
 # 防火墙规则（可能暴露端口策略）
 **/etc/config/firewall
