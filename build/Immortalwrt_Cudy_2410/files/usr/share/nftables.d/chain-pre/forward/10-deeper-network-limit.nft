@@ -1,0 +1,18 @@
+# ============================================================
+#  Deeper Network 矿机 — 多层防护限速规则
+#  位于 chain-pre/forward/ → 在 conntrack 之前执行
+#  确保每个包都经过速率检查，不会被 ct state established 绕过
+# ============================================================
+
+# --- 第一层：实时速率硬上限 ---
+# 上行限速 2 MB/s (~16 Mbps)，突发 1 MB
+ip saddr 192.168.11.0/24 limit rate over 2 mbytes/second burst 1 mbytes counter drop comment "Deeper-Upload-RateLimit"
+
+# 下行限速 3 MB/s (~24 Mbps)，突发 1 MB
+ip daddr 192.168.11.0/24 limit rate over 3 mbytes/second burst 1 mbytes counter drop comment "Deeper-Download-RateLimit"
+
+# --- 第二层：每日流量配额 5 GB (5120 mbytes) ---
+# 超过配额后完全断网，防止 ISP 发现异常流量
+# NOTE: 需要每天凌晨通过 cron 执行 nft reset counters 重置
+ip saddr 192.168.11.0/24 quota over 5120 mbytes counter drop comment "Deeper-Upload-DailyQuota"
+ip daddr 192.168.11.0/24 quota over 5120 mbytes counter drop comment "Deeper-Download-DailyQuota"
